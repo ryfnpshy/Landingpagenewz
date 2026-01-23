@@ -1069,3 +1069,175 @@ ul {
         transform: scale(1);
     }
 }
+
+/* =========================================
+   RESPONSIVE STYLES
+   ========================================= */
+
+@media (max-width: 1024px) {
+    :root {
+        --section-padding: 4rem 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .contact-wrapper {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --section-padding: 3rem 1.5rem;
+        --header-height: 70px;
+    }
+
+    /* Typography */
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Header */
+    /* (Existing hamburger styles are compatible, ensuring nav links centered) */
+    .nav-menu {
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .nav-link {
+        font-size: 1.1rem;
+        display: block;
+        padding: 0.5rem;
+    }
+
+    /* Hero */
+    .hero {
+        padding-top: 80px; /* Offset for fixed header */
+        min-height: 100vh; /* Ensure full height */
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-content img {
+        height: 150px !important; /* Resize logo */
+    }
+
+    /* Achievements */
+    .achievements-grid {
+        grid-template-columns: 1fr 1fr; /* 2x2 grid on tablet/large phone */
+        gap: 1.5rem;
+    }
+
+    .achievement-card {
+        padding: 1rem;
+    }
+    
+    .achievement-number {
+        font-size: 2.5rem;
+    }
+
+    /* General Grids */
+    .programs-grid,
+    .pricing-grid {
+        grid-template-columns: 1fr; /* Stack vertically */
+        max-width: 500px; /* Limit width for readability */
+        margin: 0 auto;
+    }
+
+    /* Team */
+    /* Scroll wrapper handles it, but maybe adjust padding */
+    .team-scroll-wrapper {
+        padding-bottom: 1rem;
+    }
+
+    /* Pricing */
+    .pricing-card.popular {
+        transform: none; /* Remove scale effect on mobile */
+        border-width: 2px;
+    }
+    
+    .pricing-card.popular:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Contact */
+    .contact-wrapper {
+        grid-template-columns: 1fr !important; /* Force stack */
+        gap: 3rem;
+    }
+    
+    .contact-info, 
+    .contact-actions {
+        text-align: center !important; /* Center align for mobile */
+        align-items: center !important;
+    }
+
+    .contact-info h2 {
+        font-size: 2rem;
+    }
+
+    .contact-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center items */
+        text-align: left; /* Keep text left aligned inside the container if preferred, or center */
+    }
+    
+    .contact-details > div {
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    /* Center the social icons */
+    .socials {
+        justify-content: center;
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .wa-cta .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .achievements-grid {
+        grid-template-columns: 1fr; /* Stack vertically on small screens */
+    }
+    
+    .contact-actions .map-container {
+        height: 250px;
+    }
+    
+    .price {
+        font-size: 2.5rem;
+    }
+    
+    .btn {
+        width: 100%; /* Full width buttons on mobile */
+    }
+    
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+}
