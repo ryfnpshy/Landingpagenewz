@@ -1082,7 +1082,7 @@ ul {
     .hero-title {
         font-size: 3rem;
     }
-    
+
     .contact-wrapper {
         gap: 2rem;
     }
@@ -1110,7 +1110,7 @@ ul {
         text-align: center;
         gap: 1.5rem;
     }
-    
+
     .nav-link {
         font-size: 1.1rem;
         display: block;
@@ -1119,8 +1119,10 @@ ul {
 
     /* Hero */
     .hero {
-        padding-top: 80px; /* Offset for fixed header */
-        min-height: 100vh; /* Ensure full height */
+        padding-top: 80px;
+        /* Offset for fixed header */
+        min-height: 100vh;
+        /* Ensure full height */
     }
 
     .hero-title {
@@ -1132,19 +1134,21 @@ ul {
     }
 
     .hero-content img {
-        height: 150px !important; /* Resize logo */
+        height: 150px !important;
+        /* Resize logo */
     }
 
     /* Achievements */
     .achievements-grid {
-        grid-template-columns: 1fr 1fr; /* 2x2 grid on tablet/large phone */
+        grid-template-columns: 1fr 1fr;
+        /* 2x2 grid on tablet/large phone */
         gap: 1.5rem;
     }
 
     .achievement-card {
         padding: 1rem;
     }
-    
+
     .achievement-number {
         font-size: 2.5rem;
     }
@@ -1152,8 +1156,10 @@ ul {
     /* General Grids */
     .programs-grid,
     .pricing-grid {
-        grid-template-columns: 1fr; /* Stack vertically */
-        max-width: 500px; /* Limit width for readability */
+        grid-template-columns: 1fr;
+        /* Stack vertically */
+        max-width: 500px;
+        /* Limit width for readability */
         margin: 0 auto;
     }
 
@@ -1165,23 +1171,26 @@ ul {
 
     /* Pricing */
     .pricing-card.popular {
-        transform: none; /* Remove scale effect on mobile */
+        transform: none;
+        /* Remove scale effect on mobile */
         border-width: 2px;
     }
-    
+
     .pricing-card.popular:hover {
         transform: translateY(-5px);
     }
 
     /* Contact */
     .contact-wrapper {
-        grid-template-columns: 1fr !important; /* Force stack */
+        grid-template-columns: 1fr !important;
+        /* Force stack */
         gap: 3rem;
     }
-    
-    .contact-info, 
+
+    .contact-info,
     .contact-actions {
-        text-align: center !important; /* Center align for mobile */
+        text-align: center !important;
+        /* Center align for mobile */
         align-items: center !important;
     }
 
@@ -1192,16 +1201,18 @@ ul {
     .contact-details {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Center items */
-        text-align: left; /* Keep text left aligned inside the container if preferred, or center */
+        align-items: center;
+        /* Center items */
+        text-align: left;
+        /* Keep text left aligned inside the container if preferred, or center */
     }
-    
-    .contact-details > div {
+
+    .contact-details>div {
         justify-content: center;
         width: 100%;
         max-width: 300px;
     }
-    
+
     /* Center the social icons */
     .socials {
         justify-content: center;
@@ -1209,7 +1220,7 @@ ul {
         gap: 1rem;
         margin-top: 1rem;
     }
-    
+
     .wa-cta .btn {
         width: 100%;
         justify-content: center;
@@ -1220,23 +1231,25 @@ ul {
     .hero-title {
         font-size: 2rem;
     }
-    
+
     .achievements-grid {
-        grid-template-columns: 1fr; /* Stack vertically on small screens */
+        grid-template-columns: 1fr;
+        /* Stack vertically on small screens */
     }
-    
+
     .contact-actions .map-container {
         height: 250px;
     }
-    
+
     .price {
         font-size: 2.5rem;
     }
-    
+
     .btn {
-        width: 100%; /* Full width buttons on mobile */
+        width: 100%;
+        /* Full width buttons on mobile */
     }
-    
+
     .gallery-grid {
         grid-template-columns: 1fr;
     }
