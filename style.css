@@ -46,6 +46,25 @@ body {
     overflow-x: hidden;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--slate-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--blue-2);
+    border-radius: 5px;
+    border: 2px solid var(--slate-100);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-1);
+}
+
 img,
 video {
     max-width: 100%;
@@ -56,6 +75,7 @@ video {
 a {
     text-decoration: none;
     color: inherit;
+    transition: all 0.3s ease;
 }
 
 ul {
@@ -324,6 +344,20 @@ ul {
     z-index: 1;
 }
 
+.hero-logo {
+    height: 200px;
+    width: auto;
+    margin: 0 auto 2rem auto;
+    display: block;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+}
+
+@media (max-width: 768px) {
+    .hero-logo {
+        height: 150px;
+    }
+}
+
 .hero-badge {
     display: inline-block;
     background: rgba(255, 255, 255, 0.2);
@@ -571,7 +605,6 @@ ul {
 .schedule-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
 }
 
 .schedule-table th,
@@ -597,6 +630,79 @@ ul {
 
 .schedule-table tr:last-child td {
     border-bottom: none;
+}
+
+/* Schedule Responsive */
+@media (max-width: 768px) {
+
+    .schedule-table,
+    .schedule-table thead,
+    .schedule-table tbody,
+    .schedule-table th,
+    .schedule-table td,
+    .schedule-table tr {
+        display: block;
+    }
+
+    .schedule-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .schedule-table tr {
+        border: 1px solid var(--slate-200);
+        margin-bottom: 1rem;
+        border-radius: 1rem;
+        overflow: hidden;
+        background: var(--white);
+    }
+
+    .schedule-table td {
+        border: none;
+        border-bottom: 1px solid var(--slate-100);
+        position: relative;
+        padding-left: 40%;
+        text-align: right;
+        font-size: 0.95rem;
+        min-height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .schedule-table td:last-child {
+        border-bottom: none;
+    }
+
+    .schedule-table td:before {
+        position: absolute;
+        left: 1rem;
+        width: 35%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 700;
+        color: var(--blue-2);
+        content: attr(data-label);
+    }
+
+    /* Fallback labels if data-label is missing (using index) */
+    .schedule-table td:nth-of-type(1):before {
+        content: "Hari: ";
+    }
+
+    .schedule-table td:nth-of-type(2):before {
+        content: "Waktu: ";
+    }
+
+    .schedule-table td:nth-of-type(3):before {
+        content: "Kelas: ";
+    }
+
+    .schedule-table td:nth-of-type(4):before {
+        content: "Lokasi: ";
+    }
 }
 
 /* Pricing */
@@ -720,11 +826,19 @@ ul {
     display: flex;
     gap: 2rem;
     overflow-x: auto;
-    padding-bottom: 2rem;
+    padding: 1rem 1.5rem 2rem 1.5rem;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--blue-2) var(--slate-100);
+}
+
+@media (max-width: 768px) {
+    .testimonial-carousel {
+        gap: 1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
 .testimonial-carousel::-webkit-scrollbar {
@@ -742,14 +856,30 @@ ul {
 }
 
 .testimonial-card {
-    min-width: 300px;
-    max-width: 400px;
+    min-width: 320px;
+    max-width: 450px;
     background: var(--slate-100);
     padding: 2.5rem;
     border-radius: 1.5rem;
     scroll-snap-align: center;
     flex-shrink: 0;
     position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .testimonial-card {
+        min-width: 280px;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .testimonial-card {
+        min-width: calc(100vw - 4rem);
+        margin: 0 0.5rem;
+    }
 }
 
 .stars {
@@ -809,6 +939,14 @@ ul {
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: center;
+}
+
+.contact-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2rem;
 }
 
 .contact-info h2 {
@@ -1163,10 +1301,6 @@ ul {
         font-size: 1rem;
     }
 
-    .hero-content img {
-        height: 150px !important;
-        /* Resize logo */
-    }
 
     /* Achievements */
     .achievements-grid {
@@ -1188,9 +1322,10 @@ ul {
     .pricing-grid {
         grid-template-columns: 1fr;
         /* Stack vertically */
-        max-width: 500px;
+        max-width: 450px;
         /* Limit width for readability */
         margin: 0 auto;
+        gap: 1.5rem;
     }
 
     /* Team */
