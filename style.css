@@ -99,6 +99,12 @@ ul {
     transition: all 0.3s ease;
     cursor: pointer;
     border: 2px solid transparent;
+    outline: none;
+}
+
+.btn:focus-visible {
+    outline: 3px solid var(--blue-1);
+    outline-offset: 2px;
 }
 
 .btn-primary {
@@ -347,6 +353,7 @@ ul {
 .hero-logo {
     height: 200px;
     width: auto;
+    aspect-ratio: 1 / 1;
     margin: 0 auto 2rem auto;
     display: block;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
@@ -423,11 +430,12 @@ ul {
 }
 
 .achievement-number {
-    font-size: 3rem;
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
     color: var(--blue-2);
     line-height: 1;
     margin-bottom: 0.5rem;
+    font-variant-numeric: tabular-nums;
 }
 
 .achievement-label {
