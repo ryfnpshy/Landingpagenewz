@@ -879,8 +879,9 @@ ul {
 
 @media (max-width: 480px) {
     .testimonial-card {
-        min-width: calc(100vw - 4rem);
-        padding: 2rem 1.75rem;
+        min-width: 250px;
+        max-width: 250px;
+        padding: 1.5rem 1.25rem;
         margin: 0;
         scroll-snap-align: center;
     }
