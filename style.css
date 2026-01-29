@@ -17,13 +17,23 @@
     --gradient-hero: linear-gradient(135deg, var(--blue-1) 0%, var(--blue-2) 100%);
     --gradient-accent: linear-gradient(to right, var(--blue-1), var(--blue-2));
 
-    /* Typography */
-    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    /* Spacing Scale (Fluid) */
+    --space-1: 0.5rem;
+    --space-2: 1rem;
+    --space-3: 1.5rem;
+    --space-4: 2rem;
+    --space-6: 3rem;
+    --space-8: 4rem;
+
+    /* Typography Scale (Fluid) */
+    --font-h1: clamp(2rem, 5vw, 3.5rem);
+    --font-h2: clamp(1.75rem, 3.5vw, 3rem);
+    --font-body: clamp(0.95rem, 1.2vw, 1.0625rem);
 
     /* Spacing */
     --container-width: 1200px;
-    --header-height: 80px;
-    --section-padding: 5rem 1rem;
+    --header-height: clamp(60px, 8vh, 80px);
+    --section-padding: clamp(3rem, 10vh, 6rem) 1rem;
 }
 
 *,
@@ -44,6 +54,30 @@ body {
     color: var(--navy);
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+/* Accessibility: Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--blue-2);
+    color: white;
+    padding: 1rem 2rem;
+    z-index: 2000;
+    transition: top 0.3s ease;
+    border-radius: 0 0 10px 0;
+    font-weight: bold;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Global Focus States */
+:focus-visible {
+    outline: 3px solid var(--blue-2) !important;
+    outline-offset: 3px !important;
 }
 
 /* Custom Scrollbar */
@@ -130,18 +164,20 @@ ul {
 }
 
 .section-title {
-    font-size: 2.25rem;
+    font-size: var(--font-h2);
     font-weight: 800;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-2);
     letter-spacing: -0.02em;
+    color: var(--navy);
 }
 
 .section-subtitle {
     text-align: center;
     color: var(--slate-600);
-    max-width: 600px;
-    margin: 0 auto 3rem auto;
+    max-width: 65ch;
+    margin: 0 auto var(--space-6) auto;
+    font-size: var(--font-body);
 }
 
 /* Header */
@@ -309,8 +345,7 @@ ul {
 /* Hero Section */
 .hero {
     position: relative;
-    height: 100vh;
-    min-height: 600px;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -319,7 +354,6 @@ ul {
     overflow: hidden;
     padding-top: var(--header-height);
     background-color: var(--blue-2);
-    /* Fallback */
 }
 
 .hero-video {
@@ -380,18 +414,19 @@ ul {
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: var(--font-h1);
     line-height: 1.1;
     font-weight: 800;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-3);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
-    max-width: 600px;
-    margin: 0 auto 2.5rem auto;
+    font-size: var(--font-body);
+    max-width: 60ch;
+    margin: 0 auto var(--space-4) auto;
     opacity: 0.95;
+    text-wrap: balance;
 }
 
 .hero-cta {
@@ -451,8 +486,8 @@ ul {
 
 .programs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(280px, 30vw, 350px), 1fr));
+    gap: var(--space-4);
 }
 
 .program-card {
@@ -467,6 +502,13 @@ ul {
 .program-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.program-card,
+.btn,
+.team-card,
+.gallery-item img {
+    will-change: transform, box-shadow;
 }
 
 .card-icon {
@@ -542,14 +584,15 @@ ul {
 }
 
 .team-card {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: clamp(240px, 40vw, 280px);
+    max-width: clamp(240px, 40vw, 280px);
     flex-shrink: 0;
+    scroll-snap-align: center;
     text-align: center;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 1rem;
-    padding: 1rem;
+    padding: var(--space-3);
 }
 
 .team-card:hover {
@@ -1252,183 +1295,51 @@ ul {
 }
 
 /* =========================================
-   RESPONSIVE STYLES
+   BREAKPOINTS (Senior Engineer Standard)
    ========================================= */
 
-@media (max-width: 1024px) {
-    :root {
-        --section-padding: 4rem 1.5rem;
+/* Mobile */
+@media (max-width: 768px) {
+    body.menu-open {
+        overflow: hidden;
     }
 
-    .hero-title {
-        font-size: 3rem;
-    }
-
-    .contact-wrapper {
-        gap: 2rem;
+    .nav-menu {
+        padding-top: var(--header-height);
+        gap: var(--space-4);
     }
 }
 
-@media (max-width: 768px) {
-    :root {
-        --section-padding: 3rem 1.5rem;
-        --header-height: 70px;
-    }
-
-    /* Typography */
-    .section-title {
-        font-size: 1.75rem;
-    }
-
-    .section-subtitle {
-        font-size: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    /* Header */
-    /* (Existing hamburger styles are compatible, ensuring nav links centered) */
-    .nav-menu {
-        text-align: center;
-        gap: 1.5rem;
-    }
-
-    .nav-link {
-        font-size: 1.1rem;
-        display: block;
-        padding: 0.5rem;
-    }
-
-    /* Hero */
-    .hero {
-        padding-top: 80px;
-        /* Offset for fixed header */
-        min-height: 100vh;
-        /* Ensure full height */
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        padding-inline: 2rem;
     }
 
     .hero-title {
-        font-size: 2.5rem;
+        font-size: clamp(2.5rem, 6vw, 3rem);
     }
 
-    .hero-subtitle {
-        font-size: 1rem;
-    }
-
-
-    /* Achievements */
-    .achievements-grid {
-        grid-template-columns: 1fr 1fr;
-        /* 2x2 grid on tablet/large phone */
-        gap: 1.5rem;
-    }
-
-    .achievement-card {
-        padding: 1rem;
-    }
-
-    .achievement-number {
-        font-size: 2.5rem;
-    }
-
-    /* General Grids */
     .programs-grid,
     .pricing-grid {
-        grid-template-columns: 1fr;
-        /* Stack vertically */
-        max-width: 450px;
-        /* Limit width for readability */
-        margin: 0 auto;
-        gap: 1.5rem;
-    }
-
-    /* Team */
-    /* Scroll wrapper handles it, but maybe adjust padding */
-    .team-scroll-wrapper {
-        padding-bottom: 1rem;
-    }
-
-    /* Pricing */
-    .pricing-card.popular {
-        transform: none;
-        /* Remove scale effect on mobile */
-        border-width: 2px;
-    }
-
-    .pricing-card.popular:hover {
-        transform: translateY(-5px);
-    }
-
-    /* Contact */
-    .contact-wrapper {
-        grid-template-columns: 1fr !important;
-        /* Force stack */
-        gap: 3rem;
-    }
-
-    .contact-info,
-    .contact-actions {
-        text-align: center !important;
-        /* Center align for mobile */
-        align-items: center !important;
-    }
-
-    .contact-info h2 {
-        font-size: 2rem;
-    }
-
-    .contact-details {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Center items */
-        text-align: left;
-        /* Keep text left aligned inside the container if preferred, or center */
-    }
-
-    .contact-details>div {
-        justify-content: center;
-        width: 100%;
-        max-width: 300px;
-    }
-
-    /* Center the social icons */
-    .socials {
-        justify-content: center;
-        display: flex;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-
-    .wa-cta .btn {
-        width: 100%;
-        justify-content: center;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 2rem;
+/* Small Laptop */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .container {
+        max-width: 1100px;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1281px) {
+    .container {
+        max-width: 1200px;
     }
 
-    .achievements-grid {
-        grid-template-columns: 1fr;
-        /* Stack vertically on small screens */
-    }
-
-    .contact-actions .map-container {
-        height: 250px;
-    }
-
-    .price {
-        font-size: 2.5rem;
-    }
-
-    .btn {
-        width: 100%;
-        /* Full width buttons on mobile */
-    }
-
-    .gallery-grid {
-        grid-template-columns: 1fr;
+    .hero-content {
+        transform: translateY(-20px);
     }
 }

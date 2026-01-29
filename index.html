@@ -10,10 +10,25 @@
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="New Z Swimming | Club Renang & Pembinaan Atlet Profesional">
-    <meta property="og:description"
-        content="Program renang berstandar atlet untuk anak dan remaja. Raih prestasi bersama pelatih berpengalaman.">
     <meta property="og:image" content="https://res.cloudinary.com/dmzezydzl/image/upload/v1769152895/logo_epdg1k.png">
+    <link rel="canonical" href="https://swimming.page.gd/">
+    <meta name="robots" content="index, follow">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="New Z Swimming | Club Renang & Pembinaan Atlet Profesional">
+    <meta name="twitter:description"
+        content="Program renang berstandar atlet untuk anak dan remaja. Raih prestasi bersama pelatih berpengalaman.">
+    <meta name="twitter:image" content="https://res.cloudinary.com/dmzezydzl/image/upload/v1769152895/logo_epdg1k.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png"
+        href="https://res.cloudinary.com/dmzezydzl/image/upload/v1769152895/logo_epdg1k.png">
+
+    <!-- Preload Hero Image -->
+    <link rel="preload" as="image"
+        href="https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=2070&auto=format&fit=crop&format=webp"
+        fetchpriority="high">
 
     <title>New Z Swimming | Club Renang & Pembinaan Atlet Profesional</title>
 
@@ -50,9 +65,44 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Apakah anak yang takut air bisa ikut?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sangat bisa. Kami memiliki metode khusus untuk pengenalan air agar anak merasa aman dan nyaman."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kapan jadwal latihan yang tersedia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kami tersedia setiap hari Selasa - Minggu. Selasa-Jumat di sore hari, dan Sabtu-Minggu tersedia pilihan pagi atau sore."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Di mana lokasi kolam renangnya?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Latihan rutin dilaksanakan di Kolam Renang Citra 1, Kalideres, Jakarta Barat."
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 
 <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
 
     <!-- Header -->
     <header class="header" id="header">
@@ -83,24 +133,20 @@
     </header>
 
     <!-- Main Content -->
-    <main>
+    <main id="main-content">
         <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="hero-overlay"></div>
-            <!-- Video Background Placeholder -->
-            <video autoplay muted loop playsinline
-                poster="https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=2070&auto=format&fit=crop"
-                class="hero-video">
-                <!-- Using a poster image as fallback and main visual if video fails/loads slow. 
-                      Since I don't have a specific video file, I will leave this tag but rely on CSS background for now or static image.
-                      Actually, let's use a high quality image for the 'cool' factor if no video is provided. 
-                 -->
-            </video>
+            <!-- Optimized Hero Image replaced video -->
+            <img src="https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=2070&auto=format&fit=crop&format=webp"
+                alt="Anak-anak berlatih renang di New Z Swimming" class="hero-video" width="1920" height="1080"
+                fetchpriority="high" style="object-fit: cover;">
             <!-- Fallback Image Background (if needed via CSS) -->
 
             <div class="container hero-content">
-                <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769152895/logo_epdg1k.png" alt="Logo Club"
-                    class="hero-logo">
+                <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769152895/logo_epdg1k.png"
+                    alt="Logo Utama New Z Swimming - Pembinaan Atlet Sejak 2011" class="hero-logo" width="200"
+                    height="200" fetchpriority="high">
                 <span class="hero-badge">Pembinaan Atlet Sejak 2011</span>
                 <h1 class="hero-title">Bangun Fondasi Juara:<br>Teknik Tepat, Mental Kuat</h1>
                 <p class="hero-subtitle">Program renang premium untuk anak & remaja dengan kurikulum terukur yang
@@ -202,7 +248,8 @@
                         <div class="team-card" data-name="Coach Arief" data-role="Pelatih Fisik"
                             data-desc="Spesialis peningkatan stamina dan kekuatan atlet renang.">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769325245/arief_yw32s0.jpg"
-                                alt="Coach Arief" loading="lazy" class="team-photo">
+                                alt="Coach Arief - Pelatih Fisik spesialis stamina" loading="lazy" decoding="async"
+                                class="team-photo" width="150" height="150">
                             <div class="team-info">
                                 <h3>Coach Arief</h3>
                                 <p class="team-role">Coach</p>
@@ -377,7 +424,8 @@
                             <li>Durasi 1 Jam / Sesi</li>
                             <li>Perdatang: Rp 100.000</li>
                         </ul>
-                        <a href="https://wa.link/8d8sm0" class="btn btn-outline-dark">Pilih Paket</a>
+                        <a href="https://wa.link/8d8sm0" class="btn btn-outline-dark"
+                            aria-label="Pilih Paket Reguler via WhatsApp">Pilih Paket</a>
                     </div>
                     <div class="pricing-card popular">
                         <div class="popular-badge">Populer</div>
@@ -389,7 +437,8 @@
                             <li>Durasi 1 Jam / Sesi</li>
                             <li>Perdatang: Rp 150.000</li>
                         </ul>
-                        <a href="https://wa.link/8d8sm0" class="btn btn-primary">Pilih Paket</a>
+                        <a href="https://wa.link/8d8sm0" class="btn btn-primary"
+                            aria-label="Pilih Paket Semi Privat via WhatsApp">Pilih Paket</a>
                     </div>
                     <div class="pricing-card">
                         <h3>Privat</h3>
@@ -400,7 +449,8 @@
                             <li>Durasi 1 Jam / Sesi</li>
                             <li>Perdatang: Rp 200.000</li>
                         </ul>
-                        <a href="https://wa.link/8d8sm0" class="btn btn-outline-dark">Pilih Paket</a>
+                        <a href="https://wa.link/8d8sm0" class="btn btn-outline-dark"
+                            aria-label="Pilih Paket Privat via WhatsApp">Pilih Paket</a>
                     </div>
                 </div>
             </div>
@@ -415,8 +465,9 @@
                     <div class="testimonial-card">
                         <div class="testi-header">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769236796/sahl_n4t1cz.jpg"
-                                alt="Sahl" class="testi-img">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                                alt="Foto Sahl, murid New Z Swimming" class="testi-img" width="50" height="50"
+                                loading="lazy" decoding="async">
+                            <div class="stars" aria-hidden="true">⭐⭐⭐⭐⭐</div>
                         </div>
                         <p class="testi-text">"Aku paling suka latihan sprint 50 meter. Setiap latihan aku selalu coba
                             ngalahin waktuku sendiri. Sekarang aku jadi percaya kalau rajin latihan pasti bisa juara."
@@ -426,8 +477,9 @@
                     <div class="testimonial-card">
                         <div class="testi-header">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769229671/rifat_pcvmzt.jpg"
-                                alt="Rifat" class="testi-img">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                                alt="Foto Rifat, murid New Z Swimming" class="testi-img" width="50" height="50"
+                                loading="lazy" decoding="async">
+                            <div class="stars" aria-hidden="true">⭐⭐⭐⭐⭐</div>
                         </div>
                         <p class="testi-text">"Latihannya seru tapi tetap serius. Senang bisa dapat medali pertama aku
                             bulan lalu."</p>
@@ -436,8 +488,9 @@
                     <div class="testimonial-card">
                         <div class="testi-header">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769236795/hafsah_v6u3a7.jpg"
-                                alt="Hafsah" class="testi-img">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                                alt="Foto Hafsah, murid New Z Swimming" class="testi-img" width="50" height="50"
+                                loading="lazy" decoding="async">
+                            <div class="stars" aria-hidden="true">⭐⭐⭐⭐⭐</div>
                         </div>
                         <p class="testi-text">"Air kolamnya dingin tapi asik! Aku suka lompat dari pinggir kolam.
                             Kakaknya selalu jagain, jadi nggak takut."</p>
@@ -446,8 +499,9 @@
                     <div class="testimonial-card">
                         <div class="testi-header">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769236794/arraya_w3mi0l.jpg"
-                                alt="Arraya" class="testi-img">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                                alt="Foto Arraya, murid New Z Swimming" class="testi-img" width="50" height="50"
+                                loading="lazy" decoding="async">
+                            <div class="stars" aria-hidden="true">⭐⭐⭐⭐⭐</div>
                         </div>
                         <p class="testi-text">"Aku ikut klub ini karena mau jadi atlet beneran. Pelatihnya ngajarin aku
                             start dan turn yang cepat. Waktu lomba kemarin aku dapat PB (personal best) dan rasanya
@@ -457,8 +511,9 @@
                     <div class="testimonial-card">
                         <div class="testi-header">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769229670/foto_melvin_bvljkh.jpg"
-                                alt="Melvin" class="testi-img">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                                alt="Foto Melvin, Alumni New Z Swimming" class="testi-img" width="50" height="50"
+                                loading="lazy" decoding="async">
+                            <div class="stars" aria-hidden="true">⭐⭐⭐⭐⭐</div>
                         </div>
                         <p class="testi-text">"NEW Z SWIMMING menjadi titik awal yang membentuk saya—tempat di mana
                             teknik, ketahanan, dan disiplin berubah menjadi keberanian untuk berjuang dan terus maju
@@ -469,12 +524,12 @@
                     <div class="testimonial-card">
                         <div class="testi-header">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769236792/zahira_oe6y6e.jpg"
-                                alt="Zahira" class="testi-img">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                                alt="Foto Zahira, murid New Z Swimming" class="testi-img" width="50" height="50"
+                                loading="lazy" decoding="async">
+                            <div class="stars" aria-hidden="true">⭐⭐⭐⭐⭐</div>
                         </div>
                         <p class="testi-text">"Latihan di klub ini membantu aku meraih juara 1 dan masuk SMP lewat jalur
-                            prestasi renang."
-                        </p>
+                            prestasi renang."</p>
                         <div class="testi-author">- Zahira, 13 Tahun</div>
                     </div>
                 </div>
@@ -519,32 +574,38 @@
                 <div class="gallery-grid">
                     <figure class="gallery-item">
                         <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769229671/sahl_grogol_r8prfy.jpg"
-                            alt="Area Swimming Competition 2025" loading="lazy">
+                            alt="Sahl saat perlombaan renang di Grogol" loading="lazy" decoding="async" width="400"
+                            height="300">
                         <figcaption>Area Swimming Competition 2025</figcaption>
                     </figure>
                     <figure class="gallery-item">
                         <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769229671/Area_speed_chalange2_jpd62f.jpg"
-                            alt="Area Speed Challenge 2025" loading="lazy">
+                            alt="Atlet cilik New Z di Area Speed Challenge 2025" loading="lazy" decoding="async"
+                            width="400" height="300">
                         <figcaption>Area Speed Challenge 2025</figcaption>
                     </figure>
                     <figure class="gallery-item">
                         <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769229671/Area_speed_chalange_lstaep.jpg"
-                            alt="Lomba Renang Tangerang 2024" loading="lazy">
+                            alt="Momen kejuaraan renang di Tangerang 2024" loading="lazy" decoding="async" width="400"
+                            height="300">
                         <figcaption>Lomba Renang Tangerang 2024</figcaption>
                     </figure>
                     <figure class="gallery-item">
                         <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769236048/gbk_veuaw0.jpg"
-                            alt="Student Open GBK" loading="lazy">
+                            alt="Tim New Z Swimming berlomba di GBK Jakarta" loading="lazy" decoding="async" width="400"
+                            height="300">
                         <figcaption>Student Open GBK</figcaption>
                     </figure>
                     <figure class="gallery-item">
                         <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769236231/latihan_bersama_p0nlhj.jpg"
-                            alt="Latihan Bersama" loading="lazy">
+                            alt="Kebersamaan tim pelatih dan murid New Z Swimming" loading="lazy" decoding="async"
+                            width="400" height="300">
                         <figcaption>Latihan Bersama</figcaption>
                     </figure>
                     <figure class="gallery-item">
                         <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769236230/renang_pagi_qizbi8.jpg"
-                            alt="Renang Pagi" loading="lazy">
+                            alt="Sesi latihan renang pagi yang disiplin" loading="lazy" decoding="async" width="400"
+                            height="300">
                         <figcaption>Renang Pagi</figcaption>
                     </figure>
                 </div>
@@ -590,16 +651,17 @@
                         </div>
 
                         <div class="socials" style="margin: 0;">
-                            <a href="https://www.instagram.com/newz.sportclub/" class="social-link"><img
+                            <a href="https://www.instagram.com/newz.sportclub/" class="social-link"
+                                aria-label="Ikuti kami di Instagram"><img
                                     src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg"
-                                    alt="Instagram"></a>
+                                    alt="Logo Instagram" width="30" height="30"></a>
                             <a href="https://www.tiktok.com/@sportclub90?is_from_webapp=1&sender_device=pc"
-                                class="social-link"><img
+                                class="social-link" aria-label="Ikuti kami di Tiktok"><img
                                     src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769326596/tiktok-logo-logo-svgrepo-com_yng53v.svg"
-                                    alt="Tiktok"></a>
-                            <a href="#" class="social-link"><img
+                                    alt="Logo Tiktok" width="30" height="30"></a>
+                            <a href="#" class="social-link" aria-label="Tonton video kami di YouTube"><img
                                     src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg"
-                                    alt="YouTube"></a>
+                                    alt="Logo YouTube" width="30" height="30"></a>
                         </div>
 
                         <div class="wa-cta">

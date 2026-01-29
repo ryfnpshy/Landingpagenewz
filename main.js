@@ -15,16 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Mobile Menu Toggle
-    hamburger.addEventListener('click', () => {
+    const toggleMenu = () => {
+        const isActive = hamburger.classList.contains('active');
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
-    });
+        document.body.classList.toggle('menu-open');
+        hamburger.setAttribute('aria-expanded', !isActive);
+    };
+
+    hamburger.addEventListener('click', toggleMenu);
 
     // Close mobile menu when clicking any link inside
     navMenu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            hamburger.setAttribute('aria-expanded', 'false');
         });
     });
 
