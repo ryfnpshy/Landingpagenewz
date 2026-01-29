@@ -684,7 +684,6 @@ ul {
         text-align: left;
         font-weight: 700;
         color: var(--blue-2);
-        content: attr(data-label);
     }
 
     /* Fallback labels if data-label is missing (using index) */
@@ -835,13 +834,11 @@ ul {
 
 @media (max-width: 768px) {
     .testimonial-carousel {
-        gap: 1rem;
-        /* Bleed out of .container padding on mobile */
-        width: calc(100% + 3rem);
-        margin-left: -1.5rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        scroll-padding-left: 1.5rem;
+        gap: 1.25rem;
+        padding: 1rem 1.5rem 2rem 1.5rem;
+        margin: 0 -1.5rem;
+        width: auto;
+        scroll-padding: 0 1.5rem;
     }
 }
 
@@ -882,9 +879,10 @@ ul {
 
 @media (max-width: 480px) {
     .testimonial-card {
-        /* Show a bit of the next card to indicate it's swipeable */
-        min-width: 85%;
-        margin: 0 0.5rem;
+        min-width: calc(100vw - 4rem);
+        padding: 2rem 1.75rem;
+        margin: 0;
+        scroll-snap-align: center;
     }
 }
 
