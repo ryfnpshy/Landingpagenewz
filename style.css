@@ -836,8 +836,12 @@ ul {
 @media (max-width: 768px) {
     .testimonial-carousel {
         gap: 1rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        /* Bleed out of .container padding on mobile */
+        width: calc(100% + 3rem);
+        margin-left: -1.5rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        scroll-padding-left: 1.5rem;
     }
 }
 
@@ -872,12 +876,14 @@ ul {
     .testimonial-card {
         min-width: 280px;
         padding: 1.5rem;
+        scroll-snap-align: start;
     }
 }
 
 @media (max-width: 480px) {
     .testimonial-card {
-        min-width: calc(100vw - 4rem);
+        /* Show a bit of the next card to indicate it's swipeable */
+        min-width: 85%;
         margin: 0 0.5rem;
     }
 }
