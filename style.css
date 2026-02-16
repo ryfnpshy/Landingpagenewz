@@ -1,17 +1,13 @@
 :root {
     /* Brand Colors */
-    --blue-1: #0EA5E9;
-    /* Aqua */
-    --blue-2: #2563EB;
-    /* Royal/Indigo Blue */
-    --blue-3: #0B76CF;
-    /* Pool Blue */
-    --white: #FFFFFF;
-    --navy: #0F172A;
-    /* Slate 900 */
+    --blue-1: #90b4ce;
+    --blue-2: #3da9fc;
+    --blue-3: #ef4565;
+    --white: #fffffe;
+    --navy: #094067;
     --slate-100: #F1F5F9;
     --slate-200: #E2E8F0;
-    --slate-600: #475569;
+    --slate-600: #5f6c7b;
 
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, var(--blue-1) 0%, var(--blue-2) 100%);
@@ -26,6 +22,7 @@
     --space-8: 4rem;
 
     /* Typography Scale (Fluid) */
+    --font-main: 'Montserrat', sans-serif;
     --font-h1: clamp(2rem, 5vw, 3.5rem);
     --font-h2: clamp(1.75rem, 3.5vw, 3rem);
     --font-body: clamp(0.95rem, 1.2vw, 1.0625rem);
