@@ -151,5 +151,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Absensi Modal Logic
+    const btnAbsensi = document.getElementById('btn-absensi');
+    const absensiModal = document.getElementById('absensi-modal');
+    const absensiPasswordInput = document.getElementById('absensi-password');
+    const submitAbsensi = document.getElementById('submit-absensi');
+    const absensiError = document.getElementById('absensi-error');
+    const closeAbsensi = document.getElementById('close-absensi');
+
+    if (btnAbsensi && absensiModal) {
+        btnAbsensi.addEventListener('click', (e) => {
+            e.preventDefault();
+            absensiModal.classList.add('active');
+            absensiPasswordInput.value = '';
+            absensiError.style.display = 'none';
+            absensiPasswordInput.focus();
+        });
+
+        closeAbsensi.addEventListener('click', () => {
+            absensiModal.classList.remove('active');
+        });
+
+        const checkPassword = () => {
+            const password = absensiPasswordInput.value;
+            if (password === 'newzswimming') {
+                window.open('https://forms.gle/cECCCjrVL8sTcimT8', '_blank');
+                absensiModal.classList.remove('active');
+            } else {
+                absensiError.style.display = 'block';
+                // Shake effect is handled by CSS animation
+                absensiPasswordInput.classList.remove('shake');
+                void absensiPasswordInput.offsetWidth; // trigger reflow
+                absensiPasswordInput.classList.add('shake');
+            }
+        };
+
+        submitAbsensi.addEventListener('click', checkPassword);
+
+        absensiPasswordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // Close when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target == absensiModal) {
+                absensiModal.classList.remove('active');
+            }
+        });
+    }
+
     console.log("Club Renang Scripts Loaded");
 });

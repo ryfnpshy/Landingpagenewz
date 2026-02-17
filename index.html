@@ -120,6 +120,7 @@
                     <li><a href="#schedule" class="nav-link">Jadwal</a></li>
                     <li><a href="#pricing" class="nav-link">Harga</a></li>
                     <li><a href="#register" class="nav-link">Kontak</a></li>
+                    <li><a href="#" id="btn-absensi" class="nav-link">Absensi</a></li>
                     <li><a href="https://wa.link/8d8sm0" target="_blank" class="btn btn-primary"
                             style="padding: 0.5rem 1.25rem;">Hubungi Pelatih</a>
                     </li>
@@ -689,6 +690,24 @@
             <p>&copy; 2026 Muhammad Rayfan Pashya - NEW Z SWIMMING. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Password Modal for Absensi -->
+    <div id="absensi-modal" class="modal">
+        <div class="modal-content auth-modal">
+            <span class="close-modal" id="close-absensi">&times;</span>
+            <div class="modal-body">
+                <div class="auth-icon">🔑</div>
+                <h3>Akses Absensi</h3>
+                <p>Silakan masukkan kata sandi untuk melanjutkan ke formulir absensi.</p>
+                <div class="input-group-auth">
+                    <input type="password" id="absensi-password" placeholder="Masukkan Password"
+                        autocomplete="current-password">
+                    <button id="submit-absensi" class="btn btn-primary">Masuk</button>
+                </div>
+                <p id="absensi-error" class="error-msg" style="display: none;">Password salah, silakan coba lagi.</p>
+            </div>
+        </div>
+    </div>
 
     <script src="main.js"></script>
 </body>
