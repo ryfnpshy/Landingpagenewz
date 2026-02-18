@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description"
         content="New Z Swimming: Club renang & les renang profesional di Jakarta Barat. Program pembinaan atlet sejak 2011. Latihan teknik, fisik, dan persiapan kompetisi.">
     <meta name="keywords" content="les renang jakarta barat, club renang, pembinaan atlet renang, kursus renang anak">
@@ -686,20 +687,14 @@
 
     <!-- Embedded Form Section -->
     <section id="absensi-form-section" class="absensi-form-section" style="display: none;">
-        <div class="container">
-            <div class="absensi-form-wrapper">
-                <div class="absensi-form-header">
-                    <h2>Formulir Absensi New Z Swimming</h2>
-                    <p>Silakan isi formulir absensi di bawah ini</p>
-                    <button id="close-absensi-form" class="btn btn-outline">Kembali</button>
-                </div>
-                <div class="absensi-form-container">
-                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfAZrbEZdiFS3F9ULG3wasNkPDyay9K9Qu1hQ0fWuvESLS9Rw/viewform?embedded=true" 
-                            frameborder="0" 
-                            marginheight="0" 
-                            marginwidth="0">Memuat…</iframe>
-                </div>
-            </div>
+        <button id="close-absensi-form" class="btn-back-floating" aria-label="Kembali ke Website">
+            <span class="back-icon">←</span>
+            <span class="back-text">Kembali</span>
+        </button>
+        <div class="absensi-iframe-wrapper">
+            <iframe
+                src="https://docs.google.com/forms/d/e/1FAIpQLSfAZrbEZdiFS3F9ULG3wasNkPDyay9K9Qu1hQ0fWuvESLS9Rw/viewform?embedded=true"
+                frameborder="0" marginheight="0" marginwidth="0">Memuat…</iframe>
         </div>
     </section>
 

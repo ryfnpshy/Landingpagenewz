@@ -1406,212 +1406,112 @@ ul {
     border-color: var(--blue-3) !important;
 }
 
-/* Embedded Absensi Form Section */
+/* Embedded Absensi Form Section - Full Screen Mode */
 .absensi-form-section {
     display: none;
-    min-height: 100vh;
-    background: linear-gradient(135deg, var(--blue-1) 0%, var(--blue-2) 100%);
-    padding: var(--section-padding);
-    position: relative;
-    overflow: hidden;
-    animation: fadeIn 0.5s ease;
-}
-
-.absensi-form-section::before {
-    content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-    pointer-events: none;
-}
-
-.absensi-form-wrapper {
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100vw;
+    height: 100vh;
     background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(9, 64, 103, 0.15);
+    z-index: 9999;
     overflow: hidden;
-    animation: slideUp 0.6s ease;
+    animation: fadeIn 0.4s ease;
+}
+
+.absensi-iframe-wrapper {
     position: relative;
-}
-
-.absensi-form-header {
-    background: var(--gradient-hero);
-    padding: 2.5rem 2rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.absensi-form-header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: float 6s ease-in-out infinite;
-}
-
-.absensi-form-header h2 {
-    color: var(--white);
-    font-size: var(--font-h2);
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: relative;
-    z-index: 1;
-}
-
-.absensi-form-header p {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    z-index: 1;
-}
-
-.absensi-form-header .btn {
-    background: var(--white);
-    color: var(--blue-2);
-    border: 2px solid var(--white);
-    padding: 0.75rem 2rem;
-    font-weight: 600;
-    border-radius: 50px;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-}
-
-.absensi-form-header .btn:hover {
-    background: transparent;
-    color: var(--white);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.absensi-form-container {
-    padding: 2rem;
-    background: var(--white);
-    position: relative;
-    overflow: hidden;
-}
-
-.absensi-form-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gradient-accent);
-}
-
-.absensi-form-container iframe {
     width: 100%;
-    height: 70vh;
-    min-height: 600px;
-    max-height: 90vh;
+    height: 100%;
+    background: var(--white);
+}
+
+.absensi-iframe-wrapper iframe {
+    width: 100%;
+    height: 100%;
     border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    transform: scale(1);
-    transform-origin: top center;
+    display: block;
 }
 
-.absensi-form-container iframe:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+/* Floating Back Button */
+.btn-back-floating {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10000;
+    background: var(--blue-2);
+    color: var(--white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Loading State */
-.absensi-form-container.loading::after {
+.btn-back-floating:hover {
+    background: var(--navy);
+    transform: scale(1.05) translateX(5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-icon {
+    font-size: 1.2rem;
+}
+
+/* Loading State for Full Screen */
+.absensi-iframe-wrapper.loading::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
-    border: 3px solid var(--slate-200);
-    border-top: 3px solid var(--blue-2);
+    width: 50px;
+    height: 50px;
+    margin: -25px 0 0 -25px;
+    border: 4px solid var(--slate-200);
+    border-top: 4px solid var(--blue-2);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .absensi-form-section {
-        padding: 1rem;
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
     }
-    
-    .absensi-form-wrapper {
-        margin: 1rem;
-        border-radius: 16px;
-    }
-    
-    .absensi-form-header {
-        padding: 2rem 1.5rem;
-    }
-    
-    .absensi-form-header h2 {
-        font-size: 1.75rem;
-    }
-    
-    .absensi-form-header p {
-        font-size: 1rem;
-    }
-    
-    .absensi-form-container {
-        padding: 1.5rem;
-    }
-    
-    .absensi-form-container iframe {
-        height: 60vh;
-        min-height: 500px;
+
+    100% {
+        transform: rotate(360deg);
     }
 }
 
+/* Responsive adjustments for the back button */
 @media (max-width: 480px) {
-    .absensi-form-header {
-        padding: 1.5rem 1rem;
-    }
-    
-    .absensi-form-header h2 {
-        font-size: 1.5rem;
-    }
-    
-    .absensi-form-container {
-        padding: 1rem;
-        padding-bottom: 0.5rem;
-        -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-        text-size-adjust: 100%;
-    }
-    
-    .absensi-form-container iframe {
-        height: 50vh;
-        min-height: 400px;
-        transform: scale(0.95);
-        width: 105%;
-        margin-left: -2.5%;
-    }
-    
-    .absensi-form-header .btn {
-        padding: 0.6rem 1.5rem;
+    .btn-back-floating {
+        top: 15px;
+        left: 15px;
+        padding: 0.6rem 1.2rem;
         font-size: 0.9rem;
     }
-    
-    .absensi-form-section {
-        -webkit-overflow-scrolling: touch;
-        overflow-x: hidden;
+
+    .back-text {
+        display: none;
+        /* Only show icon on very small screens if needed, or keep text */
     }
+
+    .btn-back-floating .back-text {
+        display: inline;
+        /* actually lets keep it */
+    }
+}
+
+/* Ensure no scroll on body when form is open */
+body.form-open {
+    overflow: hidden;
 }
 
 /* Animations */
@@ -1619,28 +1519,9 @@ ul {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-        transform: translate(-20px, -20px) rotate(180deg);
     }
 }
 
@@ -1648,20 +1529,10 @@ ul {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
-}
-
-/* Focus Management for Accessibility */
-.absensi-form-section:focus-within {
-    outline: 3px solid var(--blue-2);
-    outline-offset: 3px;
-}
-
-.absensi-form-header .btn:focus-visible {
-    outline: 3px solid var(--white);
-    outline-offset: 3px;
 }
 
 /* Iframe Error Handling */
@@ -1672,11 +1543,13 @@ ul {
     right: 0;
     bottom: 0;
     background: var(--white);
-    border-radius: 12px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 10;
+    text-align: center;
+    padding: 2rem;
 }
 
 .iframe-error h3 {
@@ -1688,7 +1561,6 @@ ul {
 .iframe-error p {
     color: var(--slate-600);
     margin-bottom: 1.5rem;
-    font-size: 1rem;
 }
 
 .iframe-error .btn {
@@ -1708,17 +1580,8 @@ ul {
 }
 
 /* Additional responsive improvements */
-@media (max-width: 320px) {
-    .absensi-form-header h2 {
-        font-size: 1.25rem;
-    }
-    
-    .absensi-form-header p {
-        font-size: 0.9rem;
-    }
-    
-    .absensi-form-container iframe {
-        height: 45vh;
-        min-height: 350px;
+@media (max-width: 480px) {
+    .btn-back-floating .back-text {
+        display: inline;
     }
 }

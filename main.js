@@ -179,35 +179,36 @@ document.addEventListener('DOMContentLoaded', () => {
             if (password === 'newzswimming') {
                 // Hide password modal and show embedded form section
                 absensiModal.classList.remove('active');
-                
+
                 // Add loading state to form container
-                const formContainer = document.querySelector('.absensi-form-container');
+                const formContainer = document.querySelector('.absensi-iframe-wrapper');
                 if (formContainer) {
                     formContainer.classList.add('loading');
                 }
-                
+
                 // Show form section with animation
                 if (absensiFormSection) {
                     absensiFormSection.style.display = 'block';
                     // Scroll to the form section
                     absensiFormSection.scrollIntoView({ behavior: 'smooth' });
-                    
+
                     // Hide main content safely
                     const mainContent = document.querySelector('main');
                     const headerContent = document.querySelector('header');
                     const footerContent = document.querySelector('footer');
-                    
+
                     if (mainContent) mainContent.style.display = 'none';
                     if (headerContent) headerContent.style.display = 'none';
                     if (footerContent) footerContent.style.display = 'none';
-                    
+                    document.body.classList.add('form-open');
+
                     // Set focus to close button for accessibility
                     setTimeout(() => {
                         const closeBtn = document.getElementById('close-absensi-form');
                         if (closeBtn) {
                             closeBtn.focus();
                         }
-                        
+
                         // Remove loading state after iframe loads
                         if (formContainer) {
                             // Add iframe load event listener
@@ -216,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 iframe.addEventListener('load', () => {
                                     formContainer.classList.remove('loading');
                                 });
-                                
+
                                 iframe.addEventListener('error', () => {
                                     formContainer.classList.remove('loading');
                                     // Show error message if iframe fails to load
@@ -231,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     `;
                                     formContainer.appendChild(errorDiv);
                                 });
-                                
+
                                 // Fallback: remove loading state after timeout
                                 setTimeout(() => {
                                     formContainer.classList.remove('loading');
@@ -277,19 +278,20 @@ document.addEventListener('DOMContentLoaded', () => {
         closeAbsensiForm.addEventListener('click', () => {
             if (absensiFormSection) {
                 absensiFormSection.style.display = 'none';
-                
+
                 // Show main content safely
                 const mainContent = document.querySelector('main');
                 const headerContent = document.querySelector('header');
                 const footerContent = document.querySelector('footer');
-                
+
                 if (mainContent) mainContent.style.display = 'block';
                 if (headerContent) headerContent.style.display = 'block';
                 if (footerContent) footerContent.style.display = 'block';
-                
+                document.body.classList.remove('form-open');
+
                 // Scroll to top and focus back to absensi button
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                
+
                 setTimeout(() => {
                     if (btnAbsensi) {
                         btnAbsensi.focus();
@@ -297,14 +299,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 500);
             }
         });
-        
+
         // Add keyboard support for closing form
         closeAbsensiForm.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeAbsensiForm.click();
             }
         });
-        
+
         // Add global keyboard support
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && absensiFormSection && absensiFormSection.style.display === 'block') {
