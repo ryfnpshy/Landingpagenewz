@@ -158,6 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitAbsensi = document.getElementById('submit-absensi');
     const absensiError = document.getElementById('absensi-error');
     const closeAbsensi = document.getElementById('close-absensi');
+    const absensiFormSection = document.getElementById('absensi-form-section');
+    const closeAbsensiForm = document.getElementById('close-absensi-form');
 
     if (btnAbsensi && absensiModal) {
         btnAbsensi.addEventListener('click', (e) => {
@@ -175,8 +177,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkPassword = () => {
             const password = absensiPasswordInput.value;
             if (password === 'newzswimming') {
-                window.open('https://forms.gle/cECCCjrVL8sTcimT8', '_blank');
+                // Hide password modal and show embedded form section
                 absensiModal.classList.remove('active');
+                absensiFormSection.style.display = 'block';
+                // Scroll to the form section
+                absensiFormSection.scrollIntoView({ behavior: 'smooth' });
+                // Hide main content
+                document.querySelector('main').style.display = 'none';
+                document.querySelector('header').style.display = 'none';
+                document.querySelector('footer').style.display = 'none';
             } else {
                 absensiError.style.display = 'block';
                 // Shake effect is handled by CSS animation
@@ -199,6 +208,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target == absensiModal) {
                 absensiModal.classList.remove('active');
             }
+        });
+    }
+
+    // Close embedded form and return to main site
+    if (closeAbsensiForm) {
+        closeAbsensiForm.addEventListener('click', () => {
+            absensiFormSection.style.display = 'none';
+            document.querySelector('main').style.display = 'block';
+            document.querySelector('header').style.display = 'block';
+            document.querySelector('footer').style.display = 'block';
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
