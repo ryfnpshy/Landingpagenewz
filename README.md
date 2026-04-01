@@ -1,4 +1,4 @@
-﻿# 🏊 NEW Z SWIMMING: Membentuk Teknik, Mengukir Kemenangan! 🏆
+# 🏊 NEW Z SWIMMING: Membentuk Teknik, Mengukir Kemenangan! 🏆
 
 [![Swimming Pro](https://img.shields.io/badge/Status-Professional%20Club-blue?style=for-the-badge&logo=swimtrack)](https://newzswimming.com)
 [![Establishment](https://img.shields.io/badge/Since-2011-gold?style=for-the-badge)](https://newzswimming.com)
@@ -17,6 +17,23 @@ Kami tidak hanya memberikan instruksi; kami membangun karakter, disiplin, dan te
 - **🥇 150+ Medali & Prestasi**: Rekam jejak nyata keberhasilan atlet kami di berbagai ajang kompetisi.
 - **👨‍🏫 Tim Pelatih Spesialis**: Dari ahli fisik hingga instruktur yang sangat sabar untuk pemula.
 - **📈 Kurikulum Berbasis Prestasi**: Latihan bertahap yang disesuaikan dengan usia dan kemampuan target.
+
+---
+
+## 📂 Struktur Proyek
+
+Berikut adalah organisasi file dalam proyek ini untuk kemudahan pemeliharaan:
+
+```text
+├── index.html          # Halaman utama landing page
+├── css/
+│   └── style.css       # File stylesheet utama (Desain & Layout)
+├── js/
+│   └── main.js         # Logika interaktif (Modal, Counter, etc)
+├── assets/             # Penyimpanan aset lokal di masa depan
+├── README.md           # Dokumentasi lengkap
+└── .gitignore          # Pengaturan file yang diabaikan Git
+```
 
 ---
 

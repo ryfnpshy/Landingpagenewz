@@ -131,6 +131,7 @@ ul {
     cursor: pointer;
     border: 2px solid transparent;
     outline: none;
+    min-height: 48px; /* Tappable area >= 44pt */
 }
 
 .btn:focus-visible {
@@ -247,10 +248,13 @@ ul {
     display: none;
     cursor: pointer;
     flex-direction: column;
+    justify-content: center;
     gap: 5px;
     z-index: 1100;
     /* Higher than menu */
     position: relative;
+    min-width: 48px; /* Safe touch target */
+    min-height: 48px;
 }
 
 .bar {
@@ -327,6 +331,10 @@ ul {
         color: var(--navy);
         font-size: 1.25rem;
         font-weight: 600;
+        padding: 0.75rem 1rem; /* Increase touch area */
+        display: block;
+        width: 100%;
+        text-align: center;
     }
 
     .nav-menu .btn {
@@ -1364,11 +1372,12 @@ ul {
     padding: 1rem 1.5rem;
     border-radius: 50px;
     border: 2px solid var(--slate-200);
-    font-size: 1rem;
+    font-size: 16px; /* Base 16px to prevent iOS auto-zoom */
     transition: all 0.3s ease;
     text-align: center;
     font-family: inherit;
     outline: none;
+    min-height: 48px;
 }
 
 .input-group-auth input:focus {
