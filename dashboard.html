@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard Admin Absensi New Z Swimming - Rekap kehadiran pelatih dan murid.">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard Admin | New Z Swimming</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js (Deferred) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+
+    <style>
+        :root {
+            /* Brand Colors from style.css */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #ffffff;
+            --border: #e2e8f0;
+            --navy: #094067;
+            --blue-accent: #3da9fc;
+            --blue-1: #90b4ce;
+            --blue-glow: rgba(61, 169, 252, 0.08);
+            
+            --teal-accent: #06b6d4;
+            --green-accent: #10b981;
+            --orange-accent: #f59e0b;
+            --red-accent: #ef4565;
+            --purple-accent: #8b5cf6;
+            
+            --text-primary: #094067; /* Navy */
+            --text-secondary: #5f6c7b; /* Slate-600 */
+            --text-muted: #94a3b8;
+            
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 25px -5px rgba(9, 64, 103, 0.08);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== HEADER ===== */
+        .dash-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 1rem;
+        }
+
+        .dash-header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            gap: 1rem;
+        }
+
+        .dash-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .dash-logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--blue-accent), var(--teal-accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dash-logo-icon svg { width: 20px; height: 20px; fill: white; }
+
+        .dash-logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .dash-logo-text span { color: var(--blue-accent); }
+
+        .dash-header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-refresh {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--blue-glow);
+            border: 1px solid rgba(61, 169, 252, 0.3);
+            color: var(--blue-accent);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-refresh:hover {
+            background: rgba(61, 169, 252, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-refresh svg { width: 15px; height: 15px; }
+
+        .btn-back-site {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .btn-back-site:hover { color: var(--text-primary); }
+
+        .last-updated {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .dash-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--blue-accent);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ===== LOADING STATE ===== */
+        #loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 42px;
+            height: 42px;
+            border: 3px solid rgba(61, 169, 252, 0.15);
+            border-top-color: var(--blue-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #dashboard-content { display: none; }
+
+        /* ===== STAT CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--blue-1);
+        }
+
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover .stat-card-icon { transform: scale(1.1) rotate(-5deg); }
+
+        .stat-card.blue .stat-card-icon { background: #e0f2fe; color: var(--blue-accent); }
+        .stat-card.green .stat-card-icon { background: #dcfce7; color: var(--green-accent); }
+        .stat-card.orange .stat-card-icon { background: #fef3c7; color: var(--orange-accent); }
+        .stat-card.purple .stat-card-icon { background: #f3e8ff; color: var(--purple-accent); }
+
+        .stat-card-icon svg { width: 24px; height: 24px; }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--navy);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* ===== CHARTS ROW ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 1024px) { 
+            .charts-grid { grid-template-columns: 1fr 1fr; } 
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .chart-card:hover { box-shadow: var(--shadow-md); }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.25rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .chart-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 240px;
+        }
+
+        /* ===== SESSION TABLE ===== */
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: #fff;
+        }
+
+        .table-title { font-size: 0.9rem; font-weight: 700; }
+        .table-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--bg-card-2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+
+        .filter-select {
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            color: var(--navy);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            appearance: none;
+            padding-right: 2.5rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23094067' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+        }
+
+        .filter-select:hover { background-color: #e2e8f0; }
+        .filter-select:focus { border-color: var(--blue-accent); box-shadow: 0 0 0 3px var(--blue-glow); }
+
+        .table-scroll { overflow-x: auto; }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        thead th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+        tbody td {
+            padding: 1rem 1.25rem;
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        .coach-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--blue-glow);
+            border: 1px solid rgba(61,169,252,0.25);
+            color: var(--blue-accent);
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+        }
+
+        .location-badge svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+        .student-pills {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+            max-width: 200px;
+        }
+
+        .student-pill {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--green-accent);
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .materi-text {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            max-width: 160px;
+        }
+
+        .time-display {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .duration-badge {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 0.15rem;
+        }
+
+        .notes-cell {
+            max-width: 180px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ===== COACH SUMMARY ===== */
+        .coach-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .coach-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s ease;
+            animation: fadeSlideUp 0.5s ease both;
+        }
+
+        .coach-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(61, 169, 252, 0.3);
+            box-shadow: 0 4px 20px rgba(61, 169, 252, 0.1);
+        }
+
+        .coach-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-accent), var(--teal-accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: white;
+            flex-shrink: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .coach-info { flex: 1; min-width: 0; }
+
+        .coach-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .coach-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.35rem;
+        }
+
+        .coach-stat {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .coach-stat span {
+            color: var(--blue-accent);
+            font-weight: 700;
+        }
+
+        /* ===== EMBED SECTION ===== */
+        .embed-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .embed-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .embed-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .embed-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green-accent);
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .embed-link {
+            font-size: 0.78rem;
+            color: var(--blue-accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: opacity 0.2s;
+        }
+
+        .embed-link:hover { opacity: 0.75; }
+
+        .embed-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
+        .embed-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* ===== ERROR STATE ===== */
+        .error-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 4rem;
+            text-align: center;
+        }
+
+        .error-icon {
+            width: 60px; height: 60px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--red-accent);
+        }
+
+        .error-icon svg { width: 28px; height: 28px; }
+
+        .error-title { font-weight: 700; color: var(--text-primary); }
+        .error-body { font-size: 0.85rem; color: var(--text-secondary); max-width: 360px; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .dash-main { padding: 1.25rem 1rem; }
+            .table-header, .filter-bar { padding: 1rem; }
+            thead th, tbody td { padding: 0.75rem 1rem; }
+            .student-pills, .materi-text, .notes-cell { max-width: 120px; }
+            .last-updated { display: none; }
+        }
+
+        @media (max-width: 400px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Stagger animation delay */
+        .stat-card:nth-child(1) { animation-delay: 0.05s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.15s; }
+        .stat-card:nth-child(4) { animation-delay: 0.2s; }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="dash-header">
+        <div class="dash-header-inner">
+            <a href="index.html" class="dash-logo">
+                <div class="dash-logo-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 12c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12zm10-1a1 1 0 100 2 1 1 0 000-2zm0-5a1 1 0 011 1v3a1 1 0 11-2 0V7a1 1 0 011-1zm0 10a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z"/></svg>
+                </div>
+                <div class="dash-logo-text">
+                    NEW Z <span>SWIMMING</span><br>
+                    <span style="font-size:0.7rem; font-weight:400; color: var(--text-muted); font-family:'Inter',sans-serif;">Admin Dashboard</span>
+                </div>
+            </a>
+
+            <div class="dash-header-right">
+                <span class="last-updated" id="last-updated-text">Memuat data...</span>
+                <button class="btn-refresh" id="btn-refresh" onclick="loadData(false)" aria-label="Refresh data">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    Refresh
+                </button>
+                <a href="index.html" class="btn-back-site" aria-label="Kembali ke website">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                    Website
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="dash-main">
+        <!-- Loading State -->
+        <div id="loading-state">
+            <div class="spinner" role="status" aria-label="Memuat data"></div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Mengambil data absensi...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state" id="error-state" role="alert">
+            <div class="error-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p class="error-title">Gagal Memuat Data</p>
+            <p class="error-body">Pastikan Google Spreadsheet sudah diatur agar dapat dibaca publik (Siapa saja yang punya link bisa melihat).</p>
+            <button class="btn-refresh" onclick="loadData(false)" style="margin-top: 0.5rem;">Coba Lagi</button>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content">
+
+            <!-- STAT CARDS -->
+            <p class="section-label">Ringkasan</p>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="stat-value" id="stat-sessions">-</div>
+                    <div class="stat-label">Total Sesi Tercatat</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="stat-value" id="stat-coaches">-</div>
+                    <div class="stat-label">Pelatih Aktif</div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="stat-value" id="stat-students">-</div>
+                    <div class="stat-label">Murid Unik Tercatat</div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="stat-value" id="stat-today">-</div>
+                    <div class="stat-label">Sesi Hari Ini</div>
+                </div>
+            </div>
+
+            <!-- CHARTS -->
+            <p class="section-label">Statistik Visual</p>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">Sesi per Pelatih</div>
+                    <div class="chart-subtitle">Distribusi jumlah sesi mengajar</div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-coach" role="img" aria-label="Bar chart sesi per pelatih"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Murid Paling Aktif</div>
+                    <div class="chart-subtitle">Frekuensi kehadiran (top 8)</div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-students" role="img" aria-label="Bar chart frekuensi murid"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COACH SUMMARY -->
+            <p class="section-label">Rekap Pelatih</p>
+            <div class="coach-grid" id="coach-grid">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- SESSION LOG TABLE -->
+            <p class="section-label">Log Sesi Mengajar</p>
+            <div class="table-card">
+                <div class="table-header">
+                    <div>
+                        <div class="table-title">Seluruh Riwayat Sesi</div>
+                    </div>
+                    <span class="table-count" id="table-count">0 sesi</span>
+                </div>
+
+                <div class="filter-bar">
+                    <span class="filter-label">Filter:</span>
+                    <select class="filter-select" id="filter-coach" aria-label="Filter pelatih" onchange="applyFilter()">
+                        <option value="">Semua Pelatih</option>
+                    </select>
+                    <select class="filter-select" id="filter-location" aria-label="Filter lokasi" onchange="applyFilter()">
+                        <option value="">Semua Lokasi</option>
+                    </select>
+                </div>
+
+                <div class="table-scroll" role="region" aria-label="Tabel riwayat sesi">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tgl & Waktu</th>
+                                <th>Pelatih</th>
+                                <th>Murid Hadir</th>
+                                <th>Materi</th>
+                                <th>Lokasi</th>
+                                <th>Catatan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="session-tbody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div><!-- end #dashboard-content -->
+    </main>
+
+    <script>
+    // ============================
+    // CONFIG
+    // ============================
+    const SHEET_ID = '1g-CK1eaLcslsOyp3ATMVX9I8gtRIFxiw9RcjOvlVSjw';
+    const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+    let allRows = [];
+    let chartCoach = null;
+    let chartStudents = null;
+
+    // ============================
+    // PARSE GOOGLE DATE STRING
+    // ============================
+    function parseGDate(val) {
+        if (!val) return null;
+        const m = String(val).match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
+        if (!m) return null;
+        return new Date(+m[1], +m[2], +m[3], +(m[4]||0), +(m[5]||0), +(m[6]||0));
+    }
+
+    // ============================
+    // FORMAT HELPERS
+    // ============================
+    function fmtDate(d) {
+        if (!d) return '-';
+        return d.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
+    }
+
+    function fmtTime(d) {
+        if (!d) return '-';
+        return d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', hour12: false });
+    }
+
+    function calcDuration(start, end) {
+        if (!start || !end) return '';
+        const diff = (end - start) / 60000;
+        if (diff <= 0) return '';
+        const h = Math.floor(diff / 60);
+        const m = diff % 60;
+        return h > 0 ? `${h}j ${m > 0 ? m+'m' : ''}` : `${m}m`;
+    }
+
+    function getInitial(name) {
+        return (name || '?').substring(0, 2).toUpperCase();
+    }
+
+    function parseStudents(raw) {
+        if (!raw) return [];
+        return raw.split(/[,،\n]/).map(s => s.trim()).filter(s => s.length > 0);
+    }
+
+    // ============================
+    // DATA MANAGEMENT & CACHING
+    // ============================
+    const CACHE_KEY = 'newz_dash_cache';
+    const CACHE_TIME_KEY = 'newz_dash_cache_time';
+    
+    // ============================
+    // LOAD DATA (Optimized: Cache-first then refresh)
+    // ============================
+    function loadData(isInitial = true) {
+        // 1. Coba ambil dari cache dulu jika ini load awal
+        if (isInitial) {
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    // Pulihkan objek Date dari string JSON
+                    allRows = parsed.map(r => ({
+                        ...r,
+                        date: r.date ? new Date(r.date) : null,
+                        timestamp: r.timestamp ? new Date(r.timestamp) : null
+                    }));
+                    
+                    // Langsung render data lama biar instan
+                    // Update Chart Colors for Light Theme
+                    Chart.defaults.color = '#5f6c7b'; // Slate-600
+                    Chart.defaults.font.family = "'Inter', sans-serif";
+                    Chart.defaults.plugins.tooltip.backgroundColor = '#094067';
+                    Chart.defaults.plugins.tooltip.titleFont = { family: "'Montserrat', sans-serif", weight: '700' };
+                    Chart.defaults.elements.bar.borderRadius = 8;
+                    Chart.defaults.scale.grid.color = '#e2e8f0';
+                    Chart.defaults.scale.grid.drawTicks = false;
+                    
+                    renderDashboard(allRows);
+                    // Update label waktu cache
+                    const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
+                    if (cacheTime) {
+                        document.getElementById('last-updated-text').textContent = `Cache: ${cacheTime}`;
+                    }
+                    // Tampilkan loading kecil (bukan overlay) jika mau, tapi biarkan overlay saja
+                } catch(e) { console.error("Cache error", e); }
+            }
+        }
+
+        // Jika tidak ada cache, tampilkan loading penuh
+        if (allRows.length === 0) {
+            document.getElementById('loading-state').style.display = 'flex';
+            document.getElementById('dashboard-content').style.display = 'none';
+        }
+        
+        document.getElementById('error-state').style.display = 'none';
+        document.getElementById('btn-refresh').disabled = true;
+
+        // 2. Ambil data segar dari Google Sheets
+        const callbackName = 'handleSheetsResponse';
+        window[callbackName] = function(json) {
+            delete window[callbackName];
+            const oldScript = document.getElementById('gviz-script');
+            if (oldScript) oldScript.remove();
+            
+            if (json.status !== 'ok') {
+                if (allRows.length === 0) showError(); // Hanya error jika tidak ada data sama sekali
+                return;
+            }
+            processData(json.table.rows);
+        };
+
+        const script = document.createElement('script');
+        script.id = 'gviz-script';
+        
+        // Timer timeout: Jika 10 detik tidak ada respon, anggap gagal
+        const timeoutLoad = setTimeout(() => {
+            if (window[callbackName]) {
+                console.warn("Loading timeout reached");
+                delete window[callbackName];
+                script.remove();
+                if (allRows.length === 0) showError();
+                else {
+                    document.getElementById('loading-state').style.display = 'none';
+                    document.getElementById('dashboard-content').style.display = 'block';
+                }
+            }
+        }, 10000);
+
+        // Perbaikan: Gunakan titik koma (;) untuk menggabung sub-parameter tqx
+        script.src = `${GVIZ_URL};responseHandler:${callbackName}`;
+        
+        const originalCallback = window[callbackName];
+        window[callbackName] = function(json) {
+            clearTimeout(timeoutLoad);
+            originalCallback(json);
+        };
+
+        script.onerror = () => { 
+            clearTimeout(timeoutLoad);
+            if (allRows.length === 0) showError(); 
+        };
+        document.head.appendChild(script);
+    }
+
+    function showError() {
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('error-state').style.display = 'flex';
+        document.getElementById('btn-refresh').disabled = false;
+    }
+
+    function processData(rows) {
+        allRows = (rows || []).map(row => {
+            const c = (row.c || []);
+            return {
+                timestamp:  parseGDate(c[0]?.v),
+                coach:      c[1]?.v || '',
+                date:       parseGDate(c[2]?.v),
+                startTime:  parseGDate(c[3]?.v),
+                endTime:    parseGDate(c[4]?.v),
+                location:   c[5]?.v || '',
+                students:   parseStudents(c[6]?.v),
+                materi:     c[7]?.v || '',
+                notes:      c[8]?.v || '',
+            };
+        });
+
+        // Simpan ke Cache untuk kunjungan berikutnya
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify(allRows));
+            const nowTime = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+            localStorage.setItem(CACHE_TIME_KEY, nowTime);
+        } catch(e) {}
+
+        // Render data segar ke UI
+        renderDashboard(allRows);
+
+        const now = new Date();
+        document.getElementById('last-updated-text').textContent =
+            'Update: ' + now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+        
+        document.getElementById('btn-refresh').disabled = false;
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('dashboard-content').style.display = 'block';
+    }
+
+    // ============================
+    // RENDER DASHBOARD
+    // ============================
+    function renderDashboard(data) {
+
+        // --- STATS ---
+        const today = new Date();
+        const todayStr = today.toDateString();
+
+        const uniqueCoaches = [...new Set(data.map(r => r.coach).filter(Boolean))];
+        const allStudents = data.flatMap(r => r.students);
+        const uniqueStudents = [...new Set(allStudents.map(s => s.toLowerCase().trim()))];
+        const todaySessions = data.filter(r => r.date && r.date.toDateString() === todayStr);
+
+        document.getElementById('stat-sessions').textContent = data.length;
+        document.getElementById('stat-coaches').textContent = uniqueCoaches.length;
+        document.getElementById('stat-students').textContent = uniqueStudents.length;
+        document.getElementById('stat-today').textContent = todaySessions.length;
+
+        // --- POPULATE FILTERS ---
+        const coachSelect = document.getElementById('filter-coach');
+        const locSelect = document.getElementById('filter-location');
+        const uniqueLocations = [...new Set(data.map(r => r.location).filter(Boolean))];
+
+        // Keep "Semua" option, rebuild the rest
+        while (coachSelect.options.length > 1) coachSelect.remove(1);
+        while (locSelect.options.length > 1) locSelect.remove(1);
+
+        uniqueCoaches.sort().forEach(c => {
+            const o = document.createElement('option');
+            o.value = c; o.textContent = c;
+            coachSelect.appendChild(o);
+        });
+
+        uniqueLocations.sort().forEach(l => {
+            const o = document.createElement('option');
+            o.value = l; o.textContent = l;
+            locSelect.appendChild(o);
+        });
+
+        // --- CHART: Sesi per Pelatih ---
+        const coachCounts = {};
+        data.forEach(r => { if (r.coach) coachCounts[r.coach] = (coachCounts[r.coach] || 0) + 1; });
+        const coachSorted = Object.entries(coachCounts).sort((a,b) => b[1]-a[1]);
+
+        if (chartCoach) chartCoach.destroy();
+        const ctxCoach = document.getElementById('chart-coach').getContext('2d');
+        chartCoach = new Chart(ctxCoach, {
+            type: 'bar',
+            data: {
+                labels: coachSorted.map(([c]) => c),
+                datasets: [{
+                    label: 'Jumlah Sesi',
+                    data: coachSorted.map(([,n]) => n),
+                    backgroundColor: 'rgba(61,169,252,0.7)',
+                    borderColor: 'rgba(61,169,252,1)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    hoverBackgroundColor: 'rgba(61,169,252,0.9)',
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} sesi` } } },
+                scales: {
+                    x: { ticks: { font: { size: 11, weight: '600' } } },
+                    y: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true }
+                }
+            }
+        });
+
+        // --- CHART: Murid Aktif ---
+        const studentCounts = {};
+        allStudents.forEach(s => {
+            const key = s.toLowerCase().trim();
+            studentCounts[key] = (studentCounts[key] || 0) + 1;
+        });
+        const studentSorted = Object.entries(studentCounts).sort((a,b) => b[1]-a[1]).slice(0, 8);
+        const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+        if (chartStudents) chartStudents.destroy();
+        const ctxStu = document.getElementById('chart-students').getContext('2d');
+        chartStudents = new Chart(ctxStu, {
+            type: 'bar',
+            data: {
+                labels: studentSorted.map(([s]) => capitalize(s)),
+                datasets: [{
+                    label: 'Kehadiran',
+                    data: studentSorted.map(([,n]) => n),
+                    backgroundColor: 'rgba(16,185,129,0.7)',
+                    borderColor: 'rgba(16,185,129,1)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    hoverBackgroundColor: 'rgba(16,185,129,0.9)',
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}x hadir` } } },
+                scales: {
+                    x: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true },
+                    y: { ticks: { font: { size: 11, weight: '600' } }, grid: { display: false } }
+                }
+            }
+        });
+
+        // --- COACH CARDS ---
+        const coachGrid = document.getElementById('coach-grid');
+        coachGrid.innerHTML = '';
+        coachSorted.forEach(([coach, sessions]) => {
+            const coachRows = data.filter(r => r.coach === coach);
+            const studentSet = new Set(coachRows.flatMap(r => r.students.map(s => s.toLowerCase().trim())));
+            const card = document.createElement('div');
+            card.className = 'coach-card';
+            card.innerHTML = `
+                <div class="coach-avatar">${getInitial(coach)}</div>
+                <div class="coach-info">
+                    <div class="coach-name">${coach}</div>
+                    <div class="coach-stats">
+                        <div class="coach-stat"><span>${sessions}</span> sesi</div>
+                        <div class="coach-stat"><span>${studentSet.size}</span> murid</div>
+                    </div>
+                </div>
+            `;
+            coachGrid.appendChild(card);
+        });
+
+        // --- TABLE ---
+        renderTable(data);
+
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('dashboard-content').style.display = 'block';
+    }
+
+    // ============================
+    // RENDER TABLE
+    // ============================
+    function renderTable(data) {
+        const tbody = document.getElementById('session-tbody');
+        tbody.innerHTML = '';
+
+        // Sort newest first
+        const sorted = [...data].sort((a, b) => {
+            const ad = a.date || a.timestamp || 0;
+            const bd = b.date || b.timestamp || 0;
+            return bd - ad;
+        });
+
+        document.getElementById('table-count').textContent = `${sorted.length} sesi`;
+
+        if (sorted.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 2rem;">Tidak ada data ditemukan</td></tr>`;
+            return;
+        }
+
+        sorted.forEach(row => {
+            const duration = calcDuration(row.startTime, row.endTime);
+            const studentPills = row.students.map(s =>
+                `<span class="student-pill">${s.trim()}</span>`
+            ).join('');
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <span class="time-display">${fmtDate(row.date)}</span>
+                    <span class="duration-badge">
+                        ${row.startTime ? fmtTime(row.startTime) : ''}${row.endTime ? ' – ' + fmtTime(row.endTime) : ''}
+                        ${duration ? ' (' + duration + ')' : ''}
+                    </span>
+                </td>
+                <td><span class="coach-badge">${row.coach || '-'}</span></td>
+                <td>
+                    <div class="student-pills">${studentPills || '<span style="color:var(--text-muted)">-</span>'}</div>
+                </td>
+                <td><div class="materi-text">${row.materi || '-'}</div></td>
+                <td>
+                    <span class="location-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        ${row.location || '-'}
+                    </span>
+                </td>
+                <td><div class="notes-cell">${row.notes || '-'}</div></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // ============================
+    // FILTER
+    // ============================
+    function applyFilter() {
+        const coach = document.getElementById('filter-coach').value;
+        const loc = document.getElementById('filter-location').value;
+
+        let filtered = allRows;
+        if (coach) filtered = filtered.filter(r => r.coach === coach);
+        if (loc) filtered = filtered.filter(r => r.location === loc);
+
+        renderTable(filtered);
+    }
+
+    // ============================
+    // INIT
+    // ============================
+    window.addEventListener('DOMContentLoaded', () => {
+        loadData();
+    });
+    </script>
+</body>
+</html>

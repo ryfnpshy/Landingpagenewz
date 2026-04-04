@@ -682,20 +682,35 @@
             </div>
         </section>
 
+        <!-- Absensi Iframe Section -->
+        <section id="absensi-section" class="absensi-section" style="display: none; padding: 2rem 0; background: var(--slate-50); border-top: 1px solid var(--slate-200);">
+            <div class="container" style="text-align: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 class="section-title" style="margin: 0; font-size: 1.5rem;">Formulir Absensi</h2>
+                    <button id="close-absensi" class="btn btn-outline-dark" style="padding: 0.5rem 1rem;">Tutup Formulir</button>
+                </div>
+                <div class="iframe-container" style="position: relative; overflow: hidden; width: 100%; padding-top: 56.25%; border-radius: 12px; box-shadow: var(--shadow-md);">
+                    <iframe id="absensi-iframe" src="" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%; height: 100%; border: none;" allowfullscreen>Memuat...</iframe>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Embedded Form Section -->
-    <section id="absensi-form-section" class="absensi-form-section" style="display: none;">
-        <button id="close-absensi-form" class="btn-back-floating" aria-label="Kembali ke Website">
-            <span class="back-icon">←</span>
-            <span class="back-text">Kembali</span>
-        </button>
-        <div class="absensi-iframe-wrapper">
-            <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLSfAZrbEZdiFS3F9ULG3wasNkPDyay9K9Qu1hQ0fWuvESLS9Rw/viewform?embedded=true"
-                frameborder="0" marginheight="0" marginwidth="0">Memuat…</iframe>
+    <!-- Password Modal -->
+    <div id="password-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 2.5rem;">
+            <span class="close-password-modal" style="position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer;">&times;</span>
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+            <h3 style="margin-bottom: 1rem;">Akses Terbatas</h3>
+            <p style="margin-bottom: 1.5rem; color: var(--slate-600); font-size: 0.9rem;">Masukkan kata sandi khusus untuk mengakses fitur yang Anda butuhkan.</p>
+            
+            <input type="password" id="absensi-password" placeholder="Kata Sandi" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1.5px solid var(--slate-200); border-radius: 8px; font-family: inherit; font-size: 1rem; outline: none;">
+            
+            <button id="submit-password" class="btn btn-primary" style="width: 100%;">Masuk</button>
+            <p id="password-error" style="color: #ef4444; font-size: 0.85rem; display: none; margin-top: 0.5rem;">Kata sandi salah!</p>
         </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -703,24 +718,6 @@
             <p>&copy; 2026 Muhammad Rayfan Pashya - NEW Z SWIMMING. All rights reserved.</p>
         </div>
     </footer>
-
-    <!-- Password Modal for Absensi -->
-    <div id="absensi-modal" class="modal">
-        <div class="modal-content auth-modal">
-            <span class="close-modal" id="close-absensi">&times;</span>
-            <div class="modal-body">
-                <div class="auth-icon">🔑</div>
-                <h3>Akses Absensi</h3>
-                <p>Silakan masukkan kata sandi untuk melanjutkan ke formulir absensi.</p>
-                <div class="input-group-auth">
-                    <input type="password" id="absensi-password" placeholder="Masukkan Password"
-                        autocomplete="current-password">
-                    <button id="submit-absensi" class="btn btn-primary">Masuk</button>
-                </div>
-                <p id="absensi-error" class="error-msg" style="display: none;">Password salah, silakan coba lagi.</p>
-            </div>
-        </div>
-    </div>
 
     <script src="js/main.js"></script>
 </body>

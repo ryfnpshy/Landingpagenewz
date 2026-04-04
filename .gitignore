@@ -26,6 +26,11 @@ yarn-error.log*
 .env.local
 .env.*.local
 
+# AI & Tool Specific (Antigravity/Gemini)
+.agents/
+skills-lock.json
+.gemini/
+
 # OS Specific
 .DS_Store
 .DS_Store?
@@ -34,3 +39,10 @@ yarn-error.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Temporary & Cache
+tmp/
+temp/
+.cache/
+.npm/
+.yarn/

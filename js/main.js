@@ -151,166 +151,91 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Absensi Modal Logic
-    const btnAbsensi = document.getElementById('btn-absensi');
-    const absensiModal = document.getElementById('absensi-modal');
-    const absensiPasswordInput = document.getElementById('absensi-password');
-    const submitAbsensi = document.getElementById('submit-absensi');
-    const absensiError = document.getElementById('absensi-error');
-    const closeAbsensi = document.getElementById('close-absensi');
-    const absensiFormSection = document.getElementById('absensi-form-section');
-    const closeAbsensiForm = document.getElementById('close-absensi-form');
 
-    if (btnAbsensi && absensiModal) {
+    // Password Protection Logic for Absensi & Dashboard
+    const btnAbsensi = document.getElementById('btn-absensi');
+    const passwordModal = document.getElementById('password-modal');
+    const passwordInput = document.getElementById('absensi-password');
+    const submitBtn = document.getElementById('submit-password');
+    const closePassModal = document.querySelector('.close-password-modal');
+    const passwordError = document.getElementById('password-error');
+    const absensiSection = document.getElementById('absensi-section');
+    const absensiIframe = document.getElementById('absensi-iframe');
+    const closeAbsensi = document.getElementById('close-absensi');
+
+    const CORRECT_PASSWORD = 'newzswimming';
+    const ABSENSI_URL = 'https://forms.gle/5BPM6LWyjamZx1bc8';
+
+    if (btnAbsensi) {
         btnAbsensi.addEventListener('click', (e) => {
             e.preventDefault();
-            absensiModal.classList.add('active');
-            absensiPasswordInput.value = '';
-            absensiError.style.display = 'none';
-            absensiPasswordInput.focus();
+            // Reset modal state
+            passwordInput.value = '';
+            passwordError.style.display = 'none';
+            submitBtn.style.display = 'block';
+            passwordInput.style.display = 'block';
+            
+            passwordModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+            setTimeout(() => passwordInput.focus(), 100);
         });
 
-        closeAbsensi.addEventListener('click', () => {
-            absensiModal.classList.remove('active');
+        closePassModal.addEventListener('click', () => {
+            passwordModal.classList.remove('active');
+            document.body.style.overflow = '';
         });
 
-        const checkPassword = () => {
-            const password = absensiPasswordInput.value;
-            if (password === 'newzswimming') {
-                // Hide password modal and show embedded form section
-                absensiModal.classList.remove('active');
-
-                // Add loading state to form container
-                const formContainer = document.querySelector('.absensi-iframe-wrapper');
-                if (formContainer) {
-                    formContainer.classList.add('loading');
-                }
-
-                // Show form section with animation
-                if (absensiFormSection) {
-                    absensiFormSection.style.display = 'block';
-                    // Scroll to the form section
-                    absensiFormSection.scrollIntoView({ behavior: 'smooth' });
-
-                    // Hide main content safely
-                    const mainContent = document.querySelector('main');
-                    const headerContent = document.querySelector('header');
-                    const footerContent = document.querySelector('footer');
-
-                    if (mainContent) mainContent.style.display = 'none';
-                    if (headerContent) headerContent.style.display = 'none';
-                    if (footerContent) footerContent.style.display = 'none';
-                    document.body.classList.add('form-open');
-
-                    // Set focus to close button for accessibility
-                    setTimeout(() => {
-                        const closeBtn = document.getElementById('close-absensi-form');
-                        if (closeBtn) {
-                            closeBtn.focus();
-                        }
-
-                        // Remove loading state after iframe loads
-                        if (formContainer) {
-                            // Add iframe load event listener
-                            const iframe = formContainer.querySelector('iframe');
-                            if (iframe) {
-                                iframe.addEventListener('load', () => {
-                                    formContainer.classList.remove('loading');
-                                });
-
-                                iframe.addEventListener('error', () => {
-                                    formContainer.classList.remove('loading');
-                                    // Show error message if iframe fails to load
-                                    const errorDiv = document.createElement('div');
-                                    errorDiv.className = 'iframe-error';
-                                    errorDiv.innerHTML = `
-                                        <div style="text-align: center; padding: 2rem; color: var(--blue-3);">
-                                            <h3>Terjadi Kesalahan</h3>
-                                            <p>Gagal memuat formulir. Silakan coba lagi atau hubungi admin.</p>
-                                            <button class="btn btn-primary" onclick="window.location.reload()">Muat Ulang</button>
-                                        </div>
-                                    `;
-                                    formContainer.appendChild(errorDiv);
-                                });
-
-                                // Fallback: remove loading state after timeout
-                                setTimeout(() => {
-                                    formContainer.classList.remove('loading');
-                                }, 5000);
-                            } else {
-                                // Remove loading state if no iframe found
-                                setTimeout(() => {
-                                    formContainer.classList.remove('loading');
-                                }, 2000);
-                            }
-                        }
-                    }, 300);
-                }
-            } else {
-                absensiError.style.display = 'block';
-                // Shake effect is handled by CSS animation
-                absensiPasswordInput.classList.remove('shake');
-                void absensiPasswordInput.offsetWidth; // trigger reflow
-                absensiPasswordInput.classList.add('shake');
-                // Focus back to password input
-                absensiPasswordInput.focus();
-            }
-        };
-
-        submitAbsensi.addEventListener('click', checkPassword);
-
-        absensiPasswordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
+        // Trigger on click
+        submitBtn.addEventListener('click', checkPass);
+        
+        // Trigger on enter key
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPass();
         });
 
-        // Close when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target == absensiModal) {
-                absensiModal.classList.remove('active');
-            }
-        });
-    }
-
-    // Close embedded form and return to main site
-    if (closeAbsensiForm) {
-        closeAbsensiForm.addEventListener('click', () => {
-            if (absensiFormSection) {
-                absensiFormSection.style.display = 'none';
-
-                // Show main content safely
-                const mainContent = document.querySelector('main');
-                const headerContent = document.querySelector('header');
-                const footerContent = document.querySelector('footer');
-
-                if (mainContent) mainContent.style.display = 'block';
-                if (headerContent) headerContent.style.display = 'block';
-                if (footerContent) footerContent.style.display = 'block';
-                document.body.classList.remove('form-open');
-
-                // Scroll to top and focus back to absensi button
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
+        function checkPass() {
+            const enteredPass = passwordInput.value;
+            
+            if (enteredPass === 'newzswimming') {
+                // Mode Absensi: Masuk ke form absensi di halaman ini
+                passwordModal.classList.remove('active');
+                document.body.style.overflow = '';
+                absensiSection.style.display = 'block';
+                absensiIframe.src = ABSENSI_URL;
+                
+                // Scroll ke form
                 setTimeout(() => {
-                    if (btnAbsensi) {
-                        btnAbsensi.focus();
-                    }
-                }, 500);
+                    absensiSection.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+            } else if (enteredPass === 'admin123') {
+                // Mode Admin: Langsung redirect ke dashboard.html
+                passwordModal.classList.remove('active');
+                document.body.style.overflow = '';
+                window.location.href = 'dashboard.html';
+            } else {
+                // Salah Password
+                passwordError.style.display = 'block';
+                passwordInput.classList.add('shake');
+                setTimeout(() => passwordInput.classList.remove('shake'), 400);
             }
+        }
+
+        // Action: Close Absensi
+        closeAbsensi.addEventListener('click', () => {
+            absensiSection.style.display = 'none';
+            absensiIframe.src = '';
         });
 
-        // Add keyboard support for closing form
-        closeAbsensiForm.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeAbsensiForm.click();
-            }
+        // Close Absensi Section
+        closeAbsensi.addEventListener('click', () => {
+            absensiSection.style.display = 'none';
+            absensiIframe.src = ''; // Clear iframe to save memory
         });
 
-        // Add global keyboard support
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && absensiFormSection && absensiFormSection.style.display === 'block') {
-                closeAbsensiForm.click();
+        window.addEventListener('click', (e) => {
+            if (e.target == passwordModal) {
+                passwordModal.classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
     }
