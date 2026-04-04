@@ -624,6 +624,28 @@
         .error-title { font-weight: 700; color: var(--text-primary); }
         .error-body { font-size: 0.85rem; color: var(--text-secondary); max-width: 360px; }
 
+        /* ===== NEW DASHBOARD WIDGETS ===== */
+        .insight-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        @media (min-width: 1024px) { .insight-grid { grid-template-columns: 2fr 1fr; } }
+        .charts-row-1 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        @media (min-width: 1024px) { .charts-row-1 { grid-template-columns: 2fr 1fr; } }
+        .charts-row-2 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        @media (min-width: 1024px) { .charts-row-2 { grid-template-columns: repeat(3, 1fr); } }
+        
+        .materi-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .materi-tag {
+            background: var(--bg-main); border: 1px solid var(--border);
+            padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem;
+            font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; gap: 0.35rem;
+        }
+        .materi-count { background: var(--blue-glow); color: var(--blue-accent); padding: 0.1rem 0.4rem; border-radius: 10px; font-size: 0.65rem; }
+
+        .warning-list { list-style: none; padding: 0; margin: 0; max-height: 240px; overflow-y: auto; }
+        .warning-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px dashed var(--border); }
+        .warning-item:last-child { border-bottom: none; }
+        .warning-name { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+        .warning-desc { font-size: 0.75rem; color: var(--red-accent); display: flex; align-items: center; gap: 0.3rem;}
+
         /* ===== ANIMATIONS ===== */
         @keyframes fadeSlideUp {
             from { opacity: 0; transform: translateY(16px); }
@@ -731,11 +753,44 @@
                     <div class="stat-value" id="stat-today">-</div>
                     <div class="stat-label">Sesi Hari Ini</div>
                 </div>
+                <div class="stat-card" style="border-color: #e2e8f0;">
+                    <div class="stat-card-icon" style="background: #f1f5f9; color: #64748b;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div class="stat-value" id="stat-duration" style="font-size: 1.8rem; padding-top:0.45rem;">-</div>
+                    <div class="stat-label">Rata-rata Durasi</div>
+                </div>
             </div>
 
-            <!-- CHARTS -->
-            <p class="section-label">Statistik Visual</p>
-            <div class="charts-grid">
+            <!-- CHARTS - ROW 1 -->
+            <p class="section-label">Aktivitas & Lokasi</p>
+            <div class="charts-row-1">
+                <div class="chart-card">
+                    <div class="chart-title">Tren Sesi (30 Hari Terakhir)</div>
+                    <div class="chart-subtitle">Konsistensi jadwal latihan harian</div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-trend" role="img" aria-label="Line chart tren sesi"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Distribusi Lokasi</div>
+                    <div class="chart-subtitle">Proporsi penggunaan kolam renang</div>
+                    <div class="chart-wrapper" style="height: 200px;">
+                        <canvas id="chart-location" role="img" aria-label="Doughnut chart lokasi"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS - ROW 2 -->
+            <p class="section-label">Statistik Kinerja</p>
+            <div class="charts-row-2">
+                <div class="chart-card">
+                    <div class="chart-title">Sesi per Hari</div>
+                    <div class="chart-subtitle">Hari paling aktif dalam seminggu</div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-day" role="img" aria-label="Bar chart sesi per hari"></canvas>
+                    </div>
+                </div>
                 <div class="chart-card">
                     <div class="chart-title">Sesi per Pelatih</div>
                     <div class="chart-subtitle">Distribusi jumlah sesi mengajar</div>
@@ -749,6 +804,25 @@
                     <div class="chart-wrapper">
                         <canvas id="chart-students" role="img" aria-label="Bar chart frekuensi murid"></canvas>
                     </div>
+                </div>
+            </div>
+
+            <!-- INSIGHTS ROW -->
+            <p class="section-label">Insight Pembinaan</p>
+            <div class="insight-grid">
+                <div class="chart-card">
+                    <div class="chart-title">Top Materi Teratas</div>
+                    <div class="chart-subtitle">Fokus latihan yang paling sering diberikan</div>
+                    <div class="materi-tags" id="top-materi">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Perlu Perhatian</div>
+                    <div class="chart-subtitle">Murid yang jarang hadir (30 hari terakhir)</div>
+                    <ul class="warning-list" id="low-attendance">
+                        <!-- Populated by JS -->
+                    </ul>
                 </div>
             </div>
 
@@ -812,6 +886,9 @@
     let allRows = [];
     let chartCoach = null;
     let chartStudents = null;
+    let chartTrend = null;
+    let chartLocation = null;
+    let chartDay = null;
 
     // ============================
     // PARSE GOOGLE DATE STRING
@@ -834,6 +911,11 @@
     function fmtTime(d) {
         if (!d) return '-';
         return d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', hour12: false });
+    }
+
+    function getDurationMins(start, end) {
+        if (!start || !end) return 0;
+        return (end - start) / 60000;
     }
 
     function calcDuration(start, end) {
@@ -1009,17 +1091,27 @@
         const uniqueStudents = [...new Set(allStudents.map(s => s.toLowerCase().trim()))];
         const todaySessions = data.filter(r => r.date && r.date.toDateString() === todayStr);
 
+        let totalDuration = 0;
+        let validDurationCount = 0;
+        data.forEach(r => {
+            const mins = getDurationMins(r.startTime, r.endTime);
+            if (mins > 0 && mins < 600) { totalDuration += mins; validDurationCount++; }
+        });
+        const avgMins = validDurationCount > 0 ? Math.round(totalDuration / validDurationCount) : 0;
+        const avgH = Math.floor(avgMins / 60);
+        const avgM = avgMins % 60;
+
         document.getElementById('stat-sessions').textContent = data.length;
         document.getElementById('stat-coaches').textContent = uniqueCoaches.length;
         document.getElementById('stat-students').textContent = uniqueStudents.length;
         document.getElementById('stat-today').textContent = todaySessions.length;
+        document.getElementById('stat-duration').textContent = avgH > 0 ? `${avgH}j ${avgM}m` : `${avgM}m`;
 
         // --- POPULATE FILTERS ---
         const coachSelect = document.getElementById('filter-coach');
         const locSelect = document.getElementById('filter-location');
         const uniqueLocations = [...new Set(data.map(r => r.location).filter(Boolean))];
 
-        // Keep "Semua" option, rebuild the rest
         while (coachSelect.options.length > 1) coachSelect.remove(1);
         while (locSelect.options.length > 1) locSelect.remove(1);
 
@@ -1035,14 +1127,100 @@
             locSelect.appendChild(o);
         });
 
+        // --- CHART: TREN SESI (30 HARI TERAKHIR) ---
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(today.getDate() - 30);
+        
+        const trendData = {};
+        for (let i = 29; i >= 0; i--) {
+            let d = new Date(today);
+            d.setDate(d.getDate() - i);
+            trendData[d.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' })] = 0;
+        }
+
+        const last30Data = data.filter(r => r.date && r.date >= thirtyDaysAgo);
+        last30Data.forEach(r => {
+            const label = r.date.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' });
+            if (trendData[label] !== undefined) trendData[label]++;
+        });
+
+        if (chartTrend) chartTrend.destroy();
+        chartTrend = new Chart(document.getElementById('chart-trend').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: Object.keys(trendData),
+                datasets: [{
+                    label: 'Sesi',
+                    data: Object.values(trendData),
+                    borderColor: 'rgba(61,169,252,1)',
+                    backgroundColor: 'rgba(61,169,252,0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 2,
+                    pointHoverRadius: 5
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                scales: { 
+                    x: { ticks: { maxTicksLimit: 10, font: {size:10} }, grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { stepSize:1, font: {size:10} } }
+                }
+            }
+        });
+
+        // --- CHART: DISTRIBUSI LOKASI ---
+        const locCounts = {};
+        data.forEach(r => { if(r.location) locCounts[r.location] = (locCounts[r.location] || 0) + 1; });
+        if (chartLocation) chartLocation.destroy();
+        chartLocation = new Chart(document.getElementById('chart-location').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(locCounts),
+                datasets: [{
+                    data: Object.values(locCounts),
+                    backgroundColor: ['#3da9fc', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: {size:11} } } } }
+        });
+
+        // --- CHART: SESI PER HARI ---
+        const dayCounts = [0,0,0,0,0,0,0];
+        data.forEach(r => { if(r.date) dayCounts[r.date.getDay()]++; });
+        const dayLabels = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+        const dayDataArr = [dayCounts[1], dayCounts[2], dayCounts[3], dayCounts[4], dayCounts[5], dayCounts[6], dayCounts[0]];
+        
+        if (chartDay) chartDay.destroy();
+        chartDay = new Chart(document.getElementById('chart-day').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: dayLabels,
+                datasets: [{
+                    label: 'Total Sesi',
+                    data: dayDataArr,
+                    backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                    borderColor: 'rgba(245, 158, 11, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                scales: { 
+                    x: { grid: { display: false }, ticks: { font: {size:10} } }, 
+                    y: { beginAtZero: true, ticks: { stepSize: 1, font: {size:10} } } 
+                } 
+            }
+        });
+
         // --- CHART: Sesi per Pelatih ---
         const coachCounts = {};
         data.forEach(r => { if (r.coach) coachCounts[r.coach] = (coachCounts[r.coach] || 0) + 1; });
         const coachSorted = Object.entries(coachCounts).sort((a,b) => b[1]-a[1]);
 
         if (chartCoach) chartCoach.destroy();
-        const ctxCoach = document.getElementById('chart-coach').getContext('2d');
-        chartCoach = new Chart(ctxCoach, {
+        chartCoach = new Chart(document.getElementById('chart-coach').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: coachSorted.map(([c]) => c),
@@ -1053,16 +1231,11 @@
                     borderColor: 'rgba(61,169,252,1)',
                     borderWidth: 1,
                     borderRadius: 6,
-                    hoverBackgroundColor: 'rgba(61,169,252,0.9)',
+                    hoverBackgroundColor: 'rgba(61,169,252,0.9)'
                 }]
             },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} sesi` } } },
-                scales: {
-                    x: { ticks: { font: { size: 11, weight: '600' } } },
-                    y: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true }
-                }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                scales: { x: { ticks: { font: { size: 11, weight: '600' } } }, y: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true } }
             }
         });
 
@@ -1076,8 +1249,7 @@
         const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
 
         if (chartStudents) chartStudents.destroy();
-        const ctxStu = document.getElementById('chart-students').getContext('2d');
-        chartStudents = new Chart(ctxStu, {
+        chartStudents = new Chart(document.getElementById('chart-students').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: studentSorted.map(([s]) => capitalize(s)),
@@ -1088,19 +1260,58 @@
                     borderColor: 'rgba(16,185,129,1)',
                     borderWidth: 1,
                     borderRadius: 6,
-                    hoverBackgroundColor: 'rgba(16,185,129,0.9)',
+                    hoverBackgroundColor: 'rgba(16,185,129,0.9)'
                 }]
             },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                indexAxis: 'y',
-                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}x hadir` } } },
-                scales: {
-                    x: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true },
-                    y: { ticks: { font: { size: 11, weight: '600' } }, grid: { display: false } }
-                }
+            options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } },
+                scales: { x: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true }, y: { ticks: { font: { size: 11, weight: '600' } }, grid: { display: false } } }
             }
         });
+
+        // --- INSIGHT: TOP MATERI ---
+        const materiCounts = {};
+        data.forEach(r => {
+            if (r.materi) {
+                const words = r.materi.split(/[,\n]/).map(w => w.trim()).filter(w => w.length > 2);
+                words.forEach(w => {
+                    const k = w.toLowerCase();
+                    materiCounts[k] = (materiCounts[k] || 0) + 1;
+                });
+            }
+        });
+        const topMateri = Object.entries(materiCounts).sort((a,b) => b[1]-a[1]).slice(0, 15);
+        document.getElementById('top-materi').innerHTML = topMateri.length > 0 
+            ? topMateri.map(([m, c]) => `<span class="materi-tag"><span style="text-transform:capitalize;">${m}</span> <span class="materi-count">${c}</span></span>`).join('')
+            : '<span class="text-muted">Materi belum cukup spesifik dicatat</span>';
+
+        // --- INSIGHT: LOW ATTENDANCE ---
+        const student30Counts = {};
+        last30Data.forEach(r => { r.students.forEach(s => { const ky = s.toLowerCase().trim(); student30Counts[ky] = (student30Counts[ky] || 0) + 1; }); });
+        const allStudentKeys = [...new Set(allStudents.map(s => s.toLowerCase().trim()))];
+        
+        const latestSeenMap = {};
+        data.forEach(r => {
+            if (r.date) {
+                r.students.forEach(s => {
+                    const k = s.toLowerCase().trim();
+                    if (!latestSeenMap[k] || r.date > latestSeenMap[k]) { latestSeenMap[k] = r.date; }
+                });
+            }
+        });
+        
+        const lowAttHtml = allStudentKeys.map(s => { return { name: s, count: student30Counts[s] || 0, last: latestSeenMap[s] }; })
+          .filter(x => x.count < 2)
+          .sort((a,b) => (a.last || 0) - (b.last || 0))
+          .slice(0, 10).map(x => `
+            <li class="warning-item">
+                <div class="warning-name" style="text-transform:capitalize;">${x.name}</div>
+                <div class="warning-desc">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Hadir ${x.count}x bln ini
+                </div>
+            </li>
+          `).join('');
+        document.getElementById('low-attendance').innerHTML = lowAttHtml || '<p style="font-size:0.8rem; color:var(--text-muted); padding: 1rem 0;">Semua murid aktif (Hadir > 1x)</p>';
 
         // --- COACH CARDS ---
         const coachGrid = document.getElementById('coach-grid');
@@ -1108,15 +1319,32 @@
         coachSorted.forEach(([coach, sessions]) => {
             const coachRows = data.filter(r => r.coach === coach);
             const studentSet = new Set(coachRows.flatMap(r => r.students.map(s => s.toLowerCase().trim())));
+            
+            let totalStu = coachRows.reduce((sum, r) => sum + r.students.length, 0);
+            const avgStu = sessions > 0 ? (totalStu / sessions).toFixed(1) : 0;
+            
+            let tMins = 0; let cValid = 0;
+            coachRows.forEach(r => {
+                let m = getDurationMins(r.startTime, r.endTime);
+                if (m > 0 && m < 600) { tMins += m; cValid++; }
+            });
+            const avgMinsC = cValid > 0 ? Math.round(tMins / cValid) : 0;
+            const ah = Math.floor(avgMinsC / 60); const am = avgMinsC % 60;
+            const durStr = ah > 0 ? `${ah}j ${am}m` : `${am}m`;
+
             const card = document.createElement('div');
             card.className = 'coach-card';
             card.innerHTML = `
                 <div class="coach-avatar">${getInitial(coach)}</div>
                 <div class="coach-info">
                     <div class="coach-name">${coach}</div>
-                    <div class="coach-stats">
+                    <div class="coach-stats" style="margin-top: 0.5rem; justify-content: space-between;">
                         <div class="coach-stat"><span>${sessions}</span> sesi</div>
                         <div class="coach-stat"><span>${studentSet.size}</span> murid</div>
+                    </div>
+                    <div class="coach-stats" style="margin-top: 0.25rem; justify-content: space-between;">
+                        <div class="coach-stat" style="font-size: 0.7rem;">Rata-rata: <span>${avgStu}</span> murid/sesi</div>
+                        <div class="coach-stat" style="font-size: 0.7rem;">Durasi: <span>${avgMinsC > 0 ? durStr : '-'}</span></div>
                     </div>
                 </div>
             `;

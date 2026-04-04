@@ -159,9 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('submit-password');
     const closePassModal = document.querySelector('.close-password-modal');
     const passwordError = document.getElementById('password-error');
-    const absensiSection = document.getElementById('absensi-section');
-    const absensiIframe = document.getElementById('absensi-iframe');
-    const closeAbsensi = document.getElementById('close-absensi');
 
     const CORRECT_PASSWORD = 'newzswimming';
     const ABSENSI_URL = 'https://forms.gle/5BPM6LWyjamZx1bc8';
@@ -197,16 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const enteredPass = passwordInput.value;
             
             if (enteredPass === 'newzswimming') {
-                // Mode Absensi: Masuk ke form absensi di halaman ini
+                // Mode Absensi: Direct to Google Form in new tab
                 passwordModal.classList.remove('active');
                 document.body.style.overflow = '';
-                absensiSection.style.display = 'block';
-                absensiIframe.src = ABSENSI_URL;
-                
-                // Scroll ke form
-                setTimeout(() => {
-                    absensiSection.scrollIntoView({ behavior: 'smooth' });
-                }, 300);
+                window.open(ABSENSI_URL, '_blank');
             } else if (enteredPass === 'admin123') {
                 // Mode Admin: Langsung redirect ke dashboard.html
                 passwordModal.classList.remove('active');
@@ -220,17 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Action: Close Absensi
-        closeAbsensi.addEventListener('click', () => {
-            absensiSection.style.display = 'none';
-            absensiIframe.src = '';
-        });
-
-        // Close Absensi Section
-        closeAbsensi.addEventListener('click', () => {
-            absensiSection.style.display = 'none';
-            absensiIframe.src = ''; // Clear iframe to save memory
-        });
 
         window.addEventListener('click', (e) => {
             if (e.target == passwordModal) {
