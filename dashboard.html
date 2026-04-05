@@ -248,9 +248,9 @@
         .stat-card:hover .stat-card-icon { transform: scale(1.1) rotate(-5deg); }
 
         .stat-card.blue .stat-card-icon { background: #e0f2fe; color: var(--blue-accent); }
-        .stat-card.green .stat-card-icon { background: #dcfce7; color: var(--green-accent); }
-        .stat-card.orange .stat-card-icon { background: #fef3c7; color: var(--orange-accent); }
-        .stat-card.purple .stat-card-icon { background: #f3e8ff; color: var(--purple-accent); }
+        .stat-card.green .stat-card-icon { background: #dcfce7; color: #10b981; }
+        .stat-card.orange .stat-card-icon { background: #ffedd5; color: #f59e0b; }
+        .stat-card.purple .stat-card-icon { background: #f3e8ff; color: #9333ea; }
 
         .stat-card-icon svg { width: 24px; height: 24px; }
 
@@ -747,19 +747,13 @@
                     <div class="stat-label">Murid Unik Tercatat</div>
                 </div>
                 <div class="stat-card purple">
-                    <div class="stat-card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    </div>
-                    <div class="stat-value" id="stat-today">-</div>
-                    <div class="stat-label">Sesi Hari Ini</div>
-                </div>
-                <div class="stat-card" style="border-color: #e2e8f0;">
-                    <div class="stat-card-icon" style="background: #f1f5f9; color: #64748b;">
+                    <div class="stat-card-icon" style="background:#f3e8ff; color:#9333ea;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </div>
-                    <div class="stat-value" id="stat-duration" style="font-size: 1.8rem; padding-top:0.45rem;">-</div>
-                    <div class="stat-label">Rata-rata Durasi</div>
+                    <div class="stat-value" id="stat-hours">-</div>
+                    <div class="stat-label">Total Jam Mengajar</div>
                 </div>
+
             </div>
 
             <!-- CHARTS - ROW 1 -->
@@ -792,8 +786,16 @@
                     </div>
                 </div>
                 <div class="chart-card">
-                    <div class="chart-title">Sesi per Pelatih</div>
-                    <div class="chart-subtitle">Distribusi jumlah sesi mengajar</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
+                        <div class="chart-title">Statistik Kehadiran Sesi</div>
+                    </div>
+                    <div class="chart-subtitle">Gunakan filter di bawah untuk menyesuaikan data sesi dan jam mengajar</div>
+                    <div class="filter-bar" style="border: none; padding: 0.5rem 0 1rem 0;">
+                        <select class="filter-select" id="filter-coach-time" style="padding: 0.5rem 2.5rem 0.5rem 1rem; width: auto;" onchange="renderDashboard(allRows)">
+                            <option value="all">Semua Waktu (All Time)</option>
+                            <option value="week" selected>Minggu Ini (Senin - Minggu)</option>
+                        </select>
+                    </div>
                     <div class="chart-wrapper">
                         <canvas id="chart-coach" role="img" aria-label="Bar chart sesi per pelatih"></canvas>
                     </div>
@@ -937,6 +939,55 @@
     }
 
     // ============================
+    // WEEKLY BOUNDARIES (Mon-Sun)
+    // ============================
+    function getWeekBoundaries() {
+        const now = new Date();
+        const day = now.getDay(); // 0 is Sunday
+        const diff = (day === 0 ? -6 : 1) - day; // Adjust to Monday
+        
+        const monday = new Date(now);
+        monday.setDate(now.getDate() + diff);
+        monday.setHours(0, 0, 0, 0);
+        
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        sunday.setHours(23, 59, 59, 999);
+        
+        return { monday, sunday };
+    }
+
+    function isThisWeek(d) {
+        if (!d) return false;
+        const { monday, sunday } = getWeekBoundaries();
+        return d >= monday && d <= sunday;
+    }
+
+    // ============================
+    // MATERI SANITIZATION
+    // ============================
+    function sanitizeMateri(allData) {
+        const keywords = ['bebas', 'katak', 'dada', 'kupu-kupu', 'punggung', 'bubbling', 'meluncur', 'pernapasan', 'jumpstart', 'water trappen', 'tumble turn', 'kick', 'dolphin', 'floating', 'sculling', 'side kick', 'fin kick'];
+        const materiCounts = {};
+        
+        allData.forEach(r => {
+            if (r.materi) {
+                const text = r.materi.toLowerCase();
+                keywords.forEach(key => {
+                    if (text.includes(key)) {
+                        materiCounts[key] = (materiCounts[key] || 0) + 1;
+                    }
+                });
+            }
+        });
+        
+        return Object.entries(materiCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+    }
+
+
+    // ============================
     // DATA MANAGEMENT & CACHING
     // ============================
     const CACHE_KEY = 'newz_dash_cache';
@@ -956,7 +1007,9 @@
                     allRows = parsed.map(r => ({
                         ...r,
                         date: r.date ? new Date(r.date) : null,
-                        timestamp: r.timestamp ? new Date(r.timestamp) : null
+                        timestamp: r.timestamp ? new Date(r.timestamp) : null,
+                        startTime: r.startTime ? new Date(r.startTime) : null,
+                        endTime: r.endTime ? new Date(r.endTime) : null
                     }));
                     
                     // Langsung render data lama biar instan
@@ -1081,6 +1134,9 @@
     // RENDER DASHBOARD
     // ============================
     function renderDashboard(data) {
+        // Prepare filter weekly
+        const viewMode = document.getElementById('filter-coach-time')?.value || 'week';
+        const filteredByTime = viewMode === 'week' ? data.filter(r => isThisWeek(r.date)) : data;
 
         // --- STATS ---
         const today = new Date();
@@ -1101,11 +1157,22 @@
         const avgH = Math.floor(avgMins / 60);
         const avgM = avgMins % 60;
 
-        document.getElementById('stat-sessions').textContent = data.length;
+        let totalMinsFiltered = 0;
+        filteredByTime.forEach(r => {
+            if (r.startTime && r.endTime) {
+                const mins = getDurationMins(r.startTime, r.endTime);
+                if (mins > 0 && mins < 600) totalMinsFiltered += mins;
+            }
+        });
+        const h_f = Math.floor(totalMinsFiltered / 60);
+        const m_f = Math.round(totalMinsFiltered % 60);
+        const totalDurationStr = h_f > 0 ? `${h_f}j ${m_f}m` : `${m_f}m`;
+
+        document.getElementById('stat-sessions').textContent = filteredByTime.length;
         document.getElementById('stat-coaches').textContent = uniqueCoaches.length;
         document.getElementById('stat-students').textContent = uniqueStudents.length;
-        document.getElementById('stat-today').textContent = todaySessions.length;
-        document.getElementById('stat-duration').textContent = avgH > 0 ? `${avgH}j ${avgM}m` : `${avgM}m`;
+        document.getElementById('stat-hours').textContent = totalDurationStr;
+
 
         // --- POPULATE FILTERS ---
         const coachSelect = document.getElementById('filter-coach');
@@ -1214,28 +1281,63 @@
             }
         });
 
-        // --- CHART: Sesi per Pelatih ---
-        const coachCounts = {};
-        data.forEach(r => { if (r.coach) coachCounts[r.coach] = (coachCounts[r.coach] || 0) + 1; });
-        const coachSorted = Object.entries(coachCounts).sort((a,b) => b[1]-a[1]);
+        // --- CHART: Sesi & Jam per Pelatih (Filtered) ---
+        const coachStats = {};
+        filteredByTime.forEach(r => { 
+            if (r.coach) {
+                if (!coachStats[r.coach]) coachStats[r.coach] = { sessions: 0, minutes: 0 };
+                coachStats[r.coach].sessions++;
+                const mins = getDurationMins(r.startTime, r.endTime);
+                if (mins > 0 && mins < 600) coachStats[r.coach].minutes += mins;
+            }
+        });
+        
+        const coachSorted = Object.entries(coachStats)
+            .sort((a,b) => b[1].sessions - a[1].sessions);
 
         if (chartCoach) chartCoach.destroy();
         chartCoach = new Chart(document.getElementById('chart-coach').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: coachSorted.map(([c]) => c),
-                datasets: [{
-                    label: 'Jumlah Sesi',
-                    data: coachSorted.map(([,n]) => n),
-                    backgroundColor: 'rgba(61,169,252,0.7)',
-                    borderColor: 'rgba(61,169,252,1)',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    hoverBackgroundColor: 'rgba(61,169,252,0.9)'
-                }]
+                datasets: [
+                    {
+                        label: 'Sesi',
+                        data: coachSorted.map(([,stats]) => stats.sessions),
+                        backgroundColor: 'rgba(61,169,252,0.7)',
+                        borderColor: 'rgba(61,169,252,1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'Jam',
+                        data: coachSorted.map(([,stats]) => (stats.minutes / 60).toFixed(1)),
+                        backgroundColor: 'rgba(16,185,129,0.7)',
+                        borderColor: 'rgba(16,185,129,1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                    }
+                ]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                scales: { x: { ticks: { font: { size: 11, weight: '600' } } }, y: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true } }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { display: true, position: 'bottom', labels: { boxWidth: 12, font: {size:11} } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label === 'Jam') return label + ': ' + context.raw + ' jam';
+                                return label + ': ' + context.raw + ' sesi';
+                            }
+                        }
+                    }
+                },
+                scales: { 
+                    x: { ticks: { font: { size: 10, weight: '600' } } }, 
+                    y: { ticks: { font: { size: 10 }, stepSize: 2 }, beginAtZero: true } 
+                }
             }
         });
 
@@ -1268,21 +1370,12 @@
             }
         });
 
-        // --- INSIGHT: TOP MATERI ---
-        const materiCounts = {};
-        data.forEach(r => {
-            if (r.materi) {
-                const words = r.materi.split(/[,\n]/).map(w => w.trim()).filter(w => w.length > 2);
-                words.forEach(w => {
-                    const k = w.toLowerCase();
-                    materiCounts[k] = (materiCounts[k] || 0) + 1;
-                });
-            }
-        });
-        const topMateri = Object.entries(materiCounts).sort((a,b) => b[1]-a[1]).slice(0, 15);
-        document.getElementById('top-materi').innerHTML = topMateri.length > 0 
-            ? topMateri.map(([m, c]) => `<span class="materi-tag"><span style="text-transform:capitalize;">${m}</span> <span class="materi-count">${c}</span></span>`).join('')
+        // --- INSIGHT: TOP MATERI (Sanitized) ---
+        const sanitizedMateri = sanitizeMateri(data);
+        document.getElementById('top-materi').innerHTML = sanitizedMateri.length > 0 
+            ? sanitizedMateri.map(({name, count}) => `<span class="materi-tag"><span style="text-transform:capitalize;">${name}</span> <span class="materi-count">${count}</span></span>`).join('')
             : '<span class="text-muted">Materi belum cukup spesifik dicatat</span>';
+
 
         // --- INSIGHT: LOW ATTENDANCE ---
         const student30Counts = {};
@@ -1313,43 +1406,46 @@
           `).join('');
         document.getElementById('low-attendance').innerHTML = lowAttHtml || '<p style="font-size:0.8rem; color:var(--text-muted); padding: 1rem 0;">Semua murid aktif (Hadir > 1x)</p>';
 
-        // --- COACH CARDS ---
+        // --- COACH CARDS (Filtered) ---
         const coachGrid = document.getElementById('coach-grid');
         coachGrid.innerHTML = '';
-        coachSorted.forEach(([coach, sessions]) => {
-            const coachRows = data.filter(r => r.coach === coach);
+        
+        // Use filteredByTime for the sessions overview cards
+        coachSorted.forEach(([coach, stats]) => {
+            const sessions = stats.sessions;
+            const coachRows = filteredByTime.filter(r => r.coach === coach);
             const studentSet = new Set(coachRows.flatMap(r => r.students.map(s => s.toLowerCase().trim())));
             
             let totalStu = coachRows.reduce((sum, r) => sum + r.students.length, 0);
             const avgStu = sessions > 0 ? (totalStu / sessions).toFixed(1) : 0;
             
-            let tMins = 0; let cValid = 0;
+            let tMins = 0;
             coachRows.forEach(r => {
                 let m = getDurationMins(r.startTime, r.endTime);
-                if (m > 0 && m < 600) { tMins += m; cValid++; }
+                if (m > 0 && m < 600) tMins += m;
             });
-            const avgMinsC = cValid > 0 ? Math.round(tMins / cValid) : 0;
-            const ah = Math.floor(avgMinsC / 60); const am = avgMinsC % 60;
-            const durStr = ah > 0 ? `${ah}j ${am}m` : `${am}m`;
+            const ah = Math.floor(tMins / 60); const am = Math.round(tMins % 60);
+            const totalDurStr = ah > 0 ? `${ah}j ${am}m` : `${am}m`;
 
             const card = document.createElement('div');
             card.className = 'coach-card';
             card.innerHTML = `
                 <div class="coach-avatar">${getInitial(coach)}</div>
                 <div class="coach-info">
-                    <div class="coach-name">${coach}</div>
+                    <div class="coach-name" title="${coach}">${coach}</div>
                     <div class="coach-stats" style="margin-top: 0.5rem; justify-content: space-between;">
                         <div class="coach-stat"><span>${sessions}</span> sesi</div>
                         <div class="coach-stat"><span>${studentSet.size}</span> murid</div>
                     </div>
                     <div class="coach-stats" style="margin-top: 0.25rem; justify-content: space-between;">
-                        <div class="coach-stat" style="font-size: 0.7rem;">Rata-rata: <span>${avgStu}</span> murid/sesi</div>
-                        <div class="coach-stat" style="font-size: 0.7rem;">Durasi: <span>${avgMinsC > 0 ? durStr : '-'}</span></div>
+                        <div class="coach-stat" style="font-size: 0.7rem;">Grup: <span>${avgStu}</span> mrd/sesi</div>
+                        <div class="coach-stat" style="font-size: 0.7rem;">Total Jam: <span>${tMins > 0 ? totalDurStr : '-'}</span></div>
                     </div>
                 </div>
             `;
             coachGrid.appendChild(card);
         });
+
 
         // --- TABLE ---
         renderTable(data);
@@ -1365,11 +1461,11 @@
         const tbody = document.getElementById('session-tbody');
         tbody.innerHTML = '';
 
-        // Sort newest first
+        // Sort newest first: Prioritize exact timestamp over general date
         const sorted = [...data].sort((a, b) => {
-            const ad = a.date || a.timestamp || 0;
-            const bd = b.date || b.timestamp || 0;
-            return bd - ad;
+            const timeA = (a.timestamp || a.date || 0);
+            const timeB = (b.timestamp || b.date || 0);
+            return timeB - timeA;
         });
 
         document.getElementById('table-count').textContent = `${sorted.length} sesi`;
