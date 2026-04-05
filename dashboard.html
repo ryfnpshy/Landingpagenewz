@@ -746,13 +746,6 @@
                     <div class="stat-value" id="stat-students">-</div>
                     <div class="stat-label">Murid Unik Tercatat</div>
                 </div>
-                <div class="stat-card purple">
-                    <div class="stat-card-icon" style="background:#f3e8ff; color:#9333ea;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    </div>
-                    <div class="stat-value" id="stat-hours">-</div>
-                    <div class="stat-label">Total Jam Mengajar</div>
-                </div>
 
             </div>
 
@@ -1157,21 +1150,9 @@
         const avgH = Math.floor(avgMins / 60);
         const avgM = avgMins % 60;
 
-        let totalMinsFiltered = 0;
-        filteredByTime.forEach(r => {
-            if (r.startTime && r.endTime) {
-                const mins = getDurationMins(r.startTime, r.endTime);
-                if (mins > 0 && mins < 600) totalMinsFiltered += mins;
-            }
-        });
-        const h_f = Math.floor(totalMinsFiltered / 60);
-        const m_f = Math.round(totalMinsFiltered % 60);
-        const totalDurationStr = h_f > 0 ? `${h_f}j ${m_f}m` : `${m_f}m`;
-
         document.getElementById('stat-sessions').textContent = filteredByTime.length;
         document.getElementById('stat-coaches').textContent = uniqueCoaches.length;
         document.getElementById('stat-students').textContent = uniqueStudents.length;
-        document.getElementById('stat-hours').textContent = totalDurationStr;
 
 
         // --- POPULATE FILTERS ---
