@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Dashboard Admin Absensi New Z Swimming - Rekap kehadiran pelatih dan murid.">
     <meta name="robots" content="noindex, nofollow">
     <title>Dashboard Admin | New Z Swimming</title>
@@ -66,7 +66,8 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            padding: 0 1rem;
+            padding: 0 max(1rem, env(safe-area-inset-left, 0px)) 0 max(1rem, env(safe-area-inset-right, 0px));
+            padding-top: env(safe-area-inset-top, 0px);
         }
 
         .dash-header-inner {
@@ -75,8 +76,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
-            gap: 1rem;
+            min-height: 64px;
+            gap: 0.75rem;
+            min-width: 0;
+            flex-wrap: wrap;
+            padding-block: 0.5rem;
         }
 
         .dash-logo {
@@ -104,6 +108,7 @@
             font-size: 0.95rem;
             color: var(--text-primary);
             line-height: 1.2;
+            min-width: 0;
         }
 
         .dash-logo-text span { color: var(--blue-accent); }
@@ -111,7 +116,10 @@
         .dash-header-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: flex-end;
+            gap: 0.5rem 1rem;
+            flex-wrap: wrap;
+            min-width: 0;
         }
 
         .btn-refresh {
@@ -655,11 +663,15 @@
         /* ===== RESPONSIVE ===== */
         @media (max-width: 640px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
-            .dash-main { padding: 1.25rem 1rem; }
+            .dash-main { padding: 1.25rem max(1rem, env(safe-area-inset-left, 0px)) 1.5rem max(1rem, env(safe-area-inset-right, 0px)); padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px)); }
             .table-header, .filter-bar { padding: 1rem; }
             thead th, tbody td { padding: 0.75rem 1rem; }
             .student-pills, .materi-text, .notes-cell { max-width: 120px; }
             .last-updated { display: none; }
+            .dash-header-inner { row-gap: 0.75rem; }
+            .dash-header-right { width: 100%; justify-content: flex-start; }
+            .btn-refresh { min-height: 44px; }
+            .btn-back-site { min-height: 44px; align-items: center; }
         }
 
         @media (max-width: 400px) {
