@@ -161,7 +161,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordError = document.getElementById('password-error');
 
     const CORRECT_PASSWORD = 'newzswimming';
-    const ABSENSI_URL = 'https://forms.gle/5BPM6LWyjamZx1bc8';
+    const ABSENSI_URL = 'https://script.google.com/macros/s/AKfycbwxFQf-l3bvEWcExkDHYGvEkAJSklVx3Pwt1KDn4YJYSj4G7K5iBP2TxjxddwR11t7c/exec';
+
+    // New Attendance Section Elements
+    const absensiSection = document.getElementById('absensi-section');
+    const absensiIframe = document.getElementById('absensi-iframe');
+    const btnBackAbsensi = document.getElementById('btn-back-absensi');
+    const iframeWrapper = document.getElementById('iframe-wrapper');
 
     if (btnAbsensi) {
         btnAbsensi.addEventListener('click', (e) => {
@@ -193,11 +199,22 @@ document.addEventListener('DOMContentLoaded', () => {
         function checkPass() {
             const enteredPass = passwordInput.value;
             
-            if (enteredPass === 'newzswimming') {
-                // Mode Absensi: Direct to Google Form in new tab
+            if (enteredPass === CORRECT_PASSWORD) {
+                // Mode Absensi: Show embedded iframe instead of redirect
                 passwordModal.classList.remove('active');
-                document.body.style.overflow = '';
-                window.open(ABSENSI_URL, '_blank');
+                
+                // Show section and load iframe
+                absensiSection.style.display = 'block';
+                document.body.classList.add('form-open');
+                
+                if (!absensiIframe.src || absensiIframe.src === 'about:blank') {
+                    iframeWrapper.classList.add('loading');
+                    absensiIframe.src = ABSENSI_URL;
+                    
+                    absensiIframe.onload = () => {
+                        iframeWrapper.classList.remove('loading');
+                    };
+                }
             } else if (enteredPass === 'admin123') {
                 // Mode Admin: Langsung redirect ke dashboard.html
                 passwordModal.classList.remove('active');
@@ -209,6 +226,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 passwordInput.classList.add('shake');
                 setTimeout(() => passwordInput.classList.remove('shake'), 400);
             }
+        }
+
+        // Back button logic for embedded form
+        if (btnBackAbsensi) {
+            btnBackAbsensi.addEventListener('click', () => {
+                absensiSection.style.display = 'none';
+                document.body.classList.remove('form-open');
+                document.body.style.overflow = '';
+            });
         }
 
 
