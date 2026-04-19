@@ -11,47 +11,54 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
-    <!-- Chart.js (Deferred) -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 
     <style>
         :root {
-            /* Brand Colors from style.css */
-            --bg-main: #f8fafc;
-            --bg-card: #ffffff;
-            --bg-card-hover: #ffffff;
-            --border: #e2e8f0;
-            --navy: #094067;
-            --blue-accent: #3da9fc;
-            --blue-1: #90b4ce;
-            --blue-glow: rgba(61, 169, 252, 0.08);
+            /* Stitch Design System Colors */
+            --primary: #00416A;
+            --primary-container: #cfe5ff;
+            --on-primary-container: #001d33;
             
-            --teal-accent: #06b6d4;
-            --green-accent: #10b981;
-            --orange-accent: #f59e0b;
-            --red-accent: #ef4565;
-            --purple-accent: #8b5cf6;
+            --secondary: #00B4D8;
+            --secondary-container: #b3ebff;
+            --on-secondary-container: #001f27;
             
-            --text-primary: #094067; /* Navy */
-            --text-secondary: #5f6c7b; /* Slate-600 */
-            --text-muted: #94a3b8;
+            --tertiary: #FF7F50;
+            --tertiary-container: #ffdbcf;
+            --on-tertiary-container: #380c00;
             
-            --radius-lg: 20px;
+            --background: #f9f9fd;
+            --surface: #f9f9fd;
+            --surface-container-low: #f3f3f7;
+            --surface-container: #ededf2;
+            --surface-container-highlight: #e7e8ec;
+            --surface-container-lowest: #ffffff;
+            
+            --on-surface: #1a1c1f;
+            --on-surface-variant: #42474e;
+            --outline-variant: #c2c7cf;
+            
+            --error: #ba1a1a;
+            
+            --radius-xl: 24px;
+            --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-lg: 0 10px 25px -5px rgba(9, 64, 103, 0.08);
+            
+            --shadow-subtle: 0 4px 12px rgba(0, 65, 106, 0.05);
+            --shadow-hover: 0 12px 32px rgba(0, 65, 106, 0.08);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-main);
-            color: var(--text-primary);
+            background: var(--background);
+            color: var(--on-surface);
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
@@ -62,12 +69,11 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(249, 249, 253, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 0 max(1rem, env(safe-area-inset-left, 0px)) 0 max(1rem, env(safe-area-inset-right, 0px));
-            padding-top: env(safe-area-inset-top, 0px);
+            border-bottom: 1px solid var(--surface-container-highlight);
+            padding: 0.75rem max(1rem, env(safe-area-inset-left, 0px)) 0.75rem max(1rem, env(safe-area-inset-right, 0px));
         }
 
         .dash-header-inner {
@@ -76,11 +82,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            min-height: 64px;
-            gap: 0.75rem;
-            min-width: 0;
             flex-wrap: wrap;
-            padding-block: 0.5rem;
+            gap: 1rem;
         }
 
         .dash-logo {
@@ -91,1435 +94,706 @@
         }
 
         .dash-logo-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, var(--blue-accent), var(--teal-accent));
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .dash-logo-icon svg { width: 20px; height: 20px; fill: white; }
+        .dash-logo-icon svg { width: 22px; height: 22px; fill: white; }
 
         .dash-logo-text {
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
-            font-size: 0.95rem;
-            color: var(--text-primary);
+            font-size: 1rem;
+            color: var(--primary);
             line-height: 1.2;
-            min-width: 0;
         }
 
-        .dash-logo-text span { color: var(--blue-accent); }
+        .dash-logo-text span { color: var(--secondary); }
+        .dash-logo-sub { font-size: 0.7rem; font-weight: 500; font-family: 'Inter', sans-serif; color: var(--on-surface-variant); }
 
-        .dash-header-right {
+        .header-controls {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 0.5rem 1rem;
-            flex-wrap: wrap;
-            min-width: 0;
+            gap: 0.75rem;
         }
+
+        .global-filter {
+            background: var(--surface-container-lowest);
+            border: 1px solid var(--outline-variant);
+            color: var(--on-surface);
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border-radius: var(--radius-xl);
+            font-size: 0.85rem;
+            font-weight: 600;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2342474e' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .global-filter:hover { background-color: var(--surface-container-low); }
+        .global-filter:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px var(--secondary-container); }
 
         .btn-refresh {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: var(--blue-glow);
-            border: 1px solid rgba(61, 169, 252, 0.3);
-            color: var(--blue-accent);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            justify-content: center;
+            background: var(--secondary-container);
+            color: var(--on-secondary-container);
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Inter', sans-serif;
+            transition: transform 0.2s, background 0.2s;
         }
-
-        .btn-refresh:hover {
-            background: rgba(61, 169, 252, 0.25);
-            transform: translateY(-1px);
-        }
-
-        .btn-refresh svg { width: 15px; height: 15px; }
-
-        .btn-back-site {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .btn-back-site:hover { color: var(--text-primary); }
-
-        .last-updated {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
+        .btn-refresh:hover { background: var(--secondary); color: white; transform: rotate(15deg); }
+        .btn-refresh svg { width: 18px; height: 18px; }
 
         /* ===== MAIN LAYOUT ===== */
         .dash-main {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 1.5rem;
+            padding: 1.5rem 1.5rem;
         }
 
-        /* ===== SECTION TITLE ===== */
-        .section-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--blue-accent);
-            margin-bottom: 1.2rem;
+        /* ===== KPI STRIP ===== */
+        .kpi-strip {
             display: flex;
-            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+            padding-bottom: 0.5rem;
+        }
+        .kpi-strip::-webkit-scrollbar { display: none; } /* Chrome */
+
+        .kpi-card {
+            flex: 1;
+            min-width: 160px;
+            background: var(--surface-container-lowest);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            scroll-snap-align: start;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid rgba(194, 199, 207, 0.2);
+            display: flex;
+            flex-direction: column;
             gap: 0.5rem;
         }
 
-        .section-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
+        .kpi-label { font-size: 0.8rem; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.05em; }
+        .kpi-value { font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; }
 
-        /* ===== LOADING STATE ===== */
-        #loading-state {
+        /* ===== TAB NAVIGATION ===== */
+        .tab-nav {
             display: flex;
-            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--surface-container);
+            padding: 0.35rem;
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--on-surface-variant);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover { color: var(--primary); }
+        .tab-btn.active { background: var(--surface-container-lowest); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .tab-panel { display: none; animation: fadeIn 0.3s ease; }
+        .tab-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== CHARTS ===== */
+        .chart-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 1024px) { .chart-grid { grid-template-columns: 2fr 1fr; } }
+        
+        .card {
+            background: var(--surface-container-lowest);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid rgba(194, 199, 207, 0.2);
+        }
+
+        .card-title { font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem; }
+        .card-subtitle { font-size: 0.8rem; color: var(--on-surface-variant); margin-bottom: 1.25rem; }
+        .chart-wrapper { position: relative; height: 260px; }
+
+        /* ===== TABLES ===== */
+        .table-responsive { overflow-x: auto; margin: -1.5rem; padding: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
+        th { font-size: 0.75rem; text-transform: uppercase; color: var(--on-surface-variant); padding: 1rem 0.5rem; border-bottom: 2px solid var(--surface-container); }
+        td { padding: 1rem 0.5rem; font-size: 0.875rem; border-bottom: 1px solid var(--surface-container); color: var(--on-surface); vertical-align: middle; }
+        tr:hover td { background-color: var(--surface-container-low); }
+
+        .th-sortable { cursor: pointer; user-select: none; }
+        .th-sortable:hover { color: var(--primary); }
+        
+        .badge {
+            display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+        }
+        .badge-navy { background: var(--primary-container); color: var(--on-primary-container); }
+        .badge-teal { background: var(--secondary-container); color: var(--on-secondary-container); }
+
+        /* ===== COACH EXPANDABLE CARDS ===== */
+        .coach-grid { display: flex; flex-direction: column; gap: 1rem; }
+        .coach-expand-card {
+            background: var(--surface-container-lowest);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid rgba(194, 199, 207, 0.2);
+            overflow: hidden;
+        }
+        .ce-header {
+            padding: 1.25rem;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            padding: 4rem;
-            color: var(--text-secondary);
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
         }
+        .ce-header:hover { background: var(--surface-container-low); }
+        .ce-info { display: flex; align-items: center; gap: 1rem; }
+        .ce-avatar { width: 48px; height: 48px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-family: 'Montserrat'; font-size: 1.2rem; }
+        .ce-name { font-weight: 700; color: var(--primary); font-size: 1rem; }
+        .ce-stats { font-size: 0.8rem; color: var(--on-surface-variant); display: flex; gap: 1rem; margin-top: 0.25rem; }
+        .ce-stats span { font-weight: 600; color: var(--on-surface); }
+        .ce-toggle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--surface-container); transition: transform 0.3s; }
+        .coach-expand-card.open .ce-toggle { transform: rotate(180deg); }
+        .ce-body { border-top: 1px solid var(--surface-container); padding: 1.25rem; display: none; background: var(--surface-container-low); }
+        .coach-expand-card.open .ce-body { display: block; }
+        
+        .student-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .s-tag { background: white; border: 1px solid var(--outline-variant); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; color: var(--on-surface); display: flex; align-items: center; gap: 0.5rem;}
+        .s-count { background: var(--surface-container); padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; font-weight: 600;}
 
-        .spinner {
-            width: 42px;
-            height: 42px;
-            border: 3px solid rgba(61, 169, 252, 0.15);
-            border-top-color: var(--blue-accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
+        /* ===== LOADING & ERROR ===== */
+        .msg-state { padding: 4rem 1rem; text-align: center; color: var(--on-surface-variant); display: none; }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--surface-container); border-top-color: var(--secondary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        #dashboard-content { display: none; }
-
-        /* ===== STAT CARDS ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dash-main { padding: 1rem; }
+            .ce-header { flex-wrap: wrap; gap: 1rem; }
+            .ce-toggle { position: absolute; right: 1rem; margin-top: 5px; }
+            .ce-info { width: 100%; padding-right: 2rem; }
         }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--blue-1);
-        }
-
-        .stat-card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.25rem;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover .stat-card-icon { transform: scale(1.1) rotate(-5deg); }
-
-        .stat-card.blue .stat-card-icon { background: #e0f2fe; color: var(--blue-accent); }
-        .stat-card.green .stat-card-icon { background: #dcfce7; color: #10b981; }
-        .stat-card.orange .stat-card-icon { background: #ffedd5; color: #f59e0b; }
-        .stat-card.purple .stat-card-icon { background: #f3e8ff; color: #9333ea; }
-
-        .stat-card-icon svg { width: 24px; height: 24px; }
-
-        .stat-value {
-            font-size: 2.25rem;
-            font-weight: 800;
-            font-family: 'Montserrat', sans-serif;
-            color: var(--navy);
-            letter-spacing: -0.02em;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        /* ===== CHARTS ROW ===== */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (min-width: 1024px) { 
-            .charts-grid { grid-template-columns: 1fr 1fr; } 
-        }
-
-        .chart-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.75rem;
-            box-shadow: var(--shadow-sm);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .chart-card:hover { box-shadow: var(--shadow-md); }
-
-        .chart-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--navy);
-            margin-bottom: 0.25rem;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .chart-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .chart-wrapper {
-            position: relative;
-            height: 240px;
-        }
-
-        /* ===== SESSION TABLE ===== */
-        .table-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .table-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            background: #fff;
-        }
-
-        .table-title { font-size: 0.9rem; font-weight: 700; }
-        .table-count {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            background: var(--bg-card-2);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-        }
-
-        /* Filter bar */
-        .filter-bar {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filter-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
-
-        .filter-select {
-            background: #f1f5f9;
-            border: 1px solid var(--border);
-            color: var(--navy);
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            font-weight: 600;
-            outline: none;
-            transition: all 0.2s;
-            cursor: pointer;
-            appearance: none;
-            padding-right: 2.5rem;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23094067' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-        }
-
-        .filter-select:hover { background-color: #e2e8f0; }
-        .filter-select:focus { border-color: var(--blue-accent); box-shadow: 0 0 0 3px var(--blue-glow); }
-
-        .table-scroll { overflow-x: auto; }
-
-        table { width: 100%; border-collapse: collapse; }
-
-        thead th {
-            background: #f8fafc;
-            text-align: left;
-            padding: 1rem 1.5rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid var(--border);
-            transition: background 0.15s;
-        }
-
-        tbody tr:last-child { border-bottom: none; }
-        tbody tr:hover { background: rgba(255,255,255,0.03); }
-
-        tbody td {
-            padding: 1rem 1.25rem;
-            font-size: 0.84rem;
-            color: var(--text-secondary);
-            vertical-align: top;
-        }
-
-        .coach-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: var(--blue-glow);
-            border: 1px solid rgba(61,169,252,0.25);
-            color: var(--blue-accent);
-            padding: 0.25rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .location-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            color: var(--text-muted);
-            font-size: 0.78rem;
-        }
-
-        .location-badge svg { width: 12px; height: 12px; flex-shrink: 0; }
-
-        .student-pills {
-            display: flex;
-            gap: 0.35rem;
-            flex-wrap: wrap;
-            max-width: 200px;
-        }
-
-        .student-pill {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            color: var(--green-accent);
-            padding: 0.15rem 0.5rem;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .materi-text {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            max-width: 160px;
-        }
-
-        .time-display {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 0.8rem;
-            color: var(--text-primary);
-            white-space: nowrap;
-        }
-
-        .duration-badge {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            display: block;
-            margin-top: 0.15rem;
-        }
-
-        .notes-cell {
-            max-width: 180px;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        /* ===== COACH SUMMARY ===== */
-        .coach-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .coach-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: all 0.2s ease;
-            animation: fadeSlideUp 0.5s ease both;
-        }
-
-        .coach-card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(61, 169, 252, 0.3);
-            box-shadow: 0 4px 20px rgba(61, 169, 252, 0.1);
-        }
-
-        .coach-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--blue-accent), var(--teal-accent));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: white;
-            flex-shrink: 0;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .coach-info { flex: 1; min-width: 0; }
-
-        .coach-name {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .coach-stats {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.35rem;
-        }
-
-        .coach-stat {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .coach-stat span {
-            color: var(--blue-accent);
-            font-weight: 700;
-        }
-
-        /* ===== EMBED SECTION ===== */
-        .embed-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .embed-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .embed-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .embed-live-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--green-accent);
-            animation: pulse 2s ease infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        .embed-link {
-            font-size: 0.78rem;
-            color: var(--blue-accent);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            transition: opacity 0.2s;
-        }
-
-        .embed-link:hover { opacity: 0.75; }
-
-        .embed-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
-        .embed-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
-        /* ===== ERROR STATE ===== */
-        .error-state {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            padding: 4rem;
-            text-align: center;
-        }
-
-        .error-icon {
-            width: 60px; height: 60px;
-            background: rgba(239, 68, 68, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--red-accent);
-        }
-
-        .error-icon svg { width: 28px; height: 28px; }
-
-        .error-title { font-weight: 700; color: var(--text-primary); }
-        .error-body { font-size: 0.85rem; color: var(--text-secondary); max-width: 360px; }
-
-        /* ===== NEW DASHBOARD WIDGETS ===== */
-        .insight-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-        @media (min-width: 1024px) { .insight-grid { grid-template-columns: 2fr 1fr; } }
-        .charts-row-1 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-        @media (min-width: 1024px) { .charts-row-1 { grid-template-columns: 2fr 1fr; } }
-        .charts-row-2 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-        @media (min-width: 1024px) { .charts-row-2 { grid-template-columns: repeat(3, 1fr); } }
-        
-        .materi-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .materi-tag {
-            background: var(--bg-main); border: 1px solid var(--border);
-            padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem;
-            font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; gap: 0.35rem;
-        }
-        .materi-count { background: var(--blue-glow); color: var(--blue-accent); padding: 0.1rem 0.4rem; border-radius: 10px; font-size: 0.65rem; }
-
-        .warning-list { list-style: none; padding: 0; margin: 0; max-height: 240px; overflow-y: auto; }
-        .warning-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px dashed var(--border); }
-        .warning-item:last-child { border-bottom: none; }
-        .warning-name { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
-        .warning-desc { font-size: 0.75rem; color: var(--red-accent); display: flex; align-items: center; gap: 0.3rem;}
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 640px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .dash-main { padding: 1.25rem max(1rem, env(safe-area-inset-left, 0px)) 1.5rem max(1rem, env(safe-area-inset-right, 0px)); padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px)); }
-            .table-header, .filter-bar { padding: 1rem; }
-            thead th, tbody td { padding: 0.75rem 1rem; }
-            .student-pills, .materi-text, .notes-cell { max-width: 120px; }
-            .last-updated { display: none; }
-            .dash-header-inner { row-gap: 0.75rem; }
-            .dash-header-right { width: 100%; justify-content: flex-start; }
-            .btn-refresh { min-height: 44px; }
-            .btn-back-site { min-height: 44px; align-items: center; }
-        }
-
-        @media (max-width: 400px) {
-            .stats-grid { grid-template-columns: 1fr; }
-        }
-
-        /* Stagger animation delay */
-        .stat-card:nth-child(1) { animation-delay: 0.05s; }
-        .stat-card:nth-child(2) { animation-delay: 0.1s; }
-        .stat-card:nth-child(3) { animation-delay: 0.15s; }
-        .stat-card:nth-child(4) { animation-delay: 0.2s; }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
+    <!-- HEADER -->
     <header class="dash-header">
         <div class="dash-header-inner">
             <a href="index.html" class="dash-logo">
                 <div class="dash-logo-icon">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 12c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12zm10-1a1 1 0 100 2 1 1 0 000-2zm0-5a1 1 0 011 1v3a1 1 0 11-2 0V7a1 1 0 011-1zm0 10a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z"/></svg>
                 </div>
-                <div class="dash-logo-text">
-                    NEW Z <span>SWIMMING</span><br>
-                    <span style="font-size:0.7rem; font-weight:400; color: var(--text-muted); font-family:'Inter',sans-serif;">Admin Dashboard</span>
+                <div>
+                    <div class="dash-logo-text">NEW Z <span>SWIMMING</span></div>
+                    <div class="dash-logo-sub">Payroll & Operations</div>
                 </div>
             </a>
-
-            <div class="dash-header-right">
-                <span class="last-updated" id="last-updated-text">Memuat data...</span>
-                <button class="btn-refresh" id="btn-refresh" onclick="loadData(false)" aria-label="Refresh data">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                    Refresh
+            <div class="header-controls">
+                <select id="global-filter" class="global-filter" onchange="applyGlobalFilter()">
+                    <option value="week" selected>Minggu Ini</option>
+                    <option value="month">Bulan Ini</option>
+                    <option value="all">Semua Waktu</option>
+                </select>
+                <button class="btn-refresh" onclick="loadData(false)" aria-label="Refresh Data">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                 </button>
-                <a href="index.html" class="btn-back-site" aria-label="Kembali ke website">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-                    Website
-                </a>
             </div>
         </div>
     </header>
 
     <main class="dash-main">
-        <!-- Loading State -->
-        <div id="loading-state">
-            <div class="spinner" role="status" aria-label="Memuat data"></div>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Mengambil data absensi...</p>
+        <!-- STATES -->
+        <div id="loading-state" class="msg-state" style="display: block;">
+            <div class="spinner"></div>
+            <p>Sinkronisasi data dari Spreadsheet...</p>
+        </div>
+        <div id="error-state" class="msg-state">
+            <svg style="width:48px;height:48px;stroke:var(--error);margin:0 auto 1rem;" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <h3 style="color:var(--error);margin-bottom:0.5rem;">Koneksi Gagal</h3>
+            <p>Pastikan Google Sheet dapat diakses publik (<a href="#" onclick="loadData(false)">Coba Lagi</a>)</p>
         </div>
 
-        <!-- Error State -->
-        <div class="error-state" id="error-state" role="alert">
-            <div class="error-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div id="dashboard-content" style="display: none;">
+            <!-- KPI STRIP -->
+            <div class="kpi-strip">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Sesi</div>
+                    <div class="kpi-value" id="kpi-sesi">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Coach Aktif</div>
+                    <div class="kpi-value" id="kpi-coach">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Jam Mengajar</div>
+                    <div class="kpi-value" id="kpi-jam">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Murid Hadir</div>
+                    <div class="kpi-value" id="kpi-murid">-</div>
+                </div>
             </div>
-            <p class="error-title">Gagal Memuat Data</p>
-            <p class="error-body">Pastikan Google Spreadsheet sudah diatur agar dapat dibaca publik (Siapa saja yang punya link bisa melihat).</p>
-            <button class="btn-refresh" onclick="loadData(false)" style="margin-top: 0.5rem;">Coba Lagi</button>
+
+            <!-- TABS -->
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('tab-overview')">Overview</button>
+                <button class="tab-btn" onclick="switchTab('tab-payroll')">Penggajian</button>
+                <button class="tab-btn" onclick="switchTab('tab-coach')">Data Coach</button>
+                <button class="tab-btn" onclick="switchTab('tab-log')">Log Sesi</button>
+            </div>
+
+            <!-- TAB 1: OVERVIEW -->
+            <div id="tab-overview" class="tab-panel active">
+                <div class="chart-grid">
+                    <div class="card">
+                        <div class="card-title">Tren Latihan (30 Hari)</div>
+                        <div class="card-subtitle">Frekuensi sesi latihan per hari</div>
+                        <div class="chart-wrapper"><canvas id="chart-trend"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Aktivitas Mingguan</div>
+                        <div class="card-subtitle">Total sesi berdasarkan hari</div>
+                        <div class="chart-wrapper"><canvas id="chart-day"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: PENGGAJIAN -->
+            <div id="tab-payroll" class="tab-panel">
+                <div class="card" style="padding:0;">
+                    <div style="padding:1.5rem; border-bottom:1px solid var(--surface-container);">
+                        <div class="card-title">Rekap Penggajian Coach</div>
+                        <div class="card-subtitle" style="margin:0;">Dasar perhitungan gaji berdasarkan performa periode ini.</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="payroll-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Coach</th>
+                                    <th>Jumlah Sesi</th>
+                                    <th>Total Jam</th>
+                                    <th>Rata-rata/Sesi</th>
+                                    <th>Total Murid</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payroll-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: DATA COACH -->
+            <div id="tab-coach" class="tab-panel">
+                <div class="coach-grid" id="coach-expand-grid"></div>
+            </div>
+
+            <!-- TAB 4: LOG SESI -->
+            <div id="tab-log" class="tab-panel">
+                <div class="card" style="padding:0;">
+                    <div style="padding:1.5rem; border-bottom:1px solid var(--surface-container);">
+                        <div class="card-title">Log Seluruh Sesi</div>
+                        <div class="card-subtitle" style="margin:0;">Riwayat absensi dan durasi mengajar.</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="log-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu & Tanggal</th>
+                                    <th>Coach</th>
+                                    <th>Durasi</th>
+                                    <th>Murid</th>
+                                    <th>Lokasi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="log-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <!-- Dashboard Content -->
-        <div id="dashboard-content">
-
-            <!-- STAT CARDS -->
-            <p class="section-label">Ringkasan</p>
-            <div class="stats-grid" id="stats-grid">
-                <div class="stat-card blue">
-                    <div class="stat-card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    </div>
-                    <div class="stat-value" id="stat-sessions">-</div>
-                    <div class="stat-label">Total Sesi Tercatat</div>
-                </div>
-                <div class="stat-card green">
-                    <div class="stat-card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    </div>
-                    <div class="stat-value" id="stat-coaches">-</div>
-                    <div class="stat-label">Pelatih Aktif</div>
-                </div>
-                <div class="stat-card orange">
-                    <div class="stat-card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    </div>
-                    <div class="stat-value" id="stat-students">-</div>
-                    <div class="stat-label">Murid Unik Tercatat</div>
-                </div>
-
-            </div>
-
-            <!-- CHARTS - ROW 1 -->
-            <p class="section-label">Aktivitas & Lokasi</p>
-            <div class="charts-row-1">
-                <div class="chart-card">
-                    <div class="chart-title">Tren Sesi (30 Hari Terakhir)</div>
-                    <div class="chart-subtitle">Konsistensi jadwal latihan harian</div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart-trend" role="img" aria-label="Line chart tren sesi"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">Distribusi Lokasi</div>
-                    <div class="chart-subtitle">Proporsi penggunaan kolam renang</div>
-                    <div class="chart-wrapper" style="height: 200px;">
-                        <canvas id="chart-location" role="img" aria-label="Doughnut chart lokasi"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CHARTS - ROW 2 -->
-            <p class="section-label">Statistik Kinerja</p>
-            <div class="charts-row-2">
-                <div class="chart-card">
-                    <div class="chart-title">Sesi per Hari</div>
-                    <div class="chart-subtitle">Hari paling aktif dalam seminggu</div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart-day" role="img" aria-label="Bar chart sesi per hari"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
-                        <div class="chart-title">Statistik Kehadiran Sesi</div>
-                    </div>
-                    <div class="chart-subtitle">Gunakan filter di bawah untuk menyesuaikan data sesi dan jam mengajar</div>
-                    <div class="filter-bar" style="border: none; padding: 0.5rem 0 1rem 0;">
-                        <select class="filter-select" id="filter-coach-time" style="padding: 0.5rem 2.5rem 0.5rem 1rem; width: auto;" onchange="renderDashboard(allRows)">
-                            <option value="all">Semua Waktu (All Time)</option>
-                            <option value="week" selected>Minggu Ini (Senin - Minggu)</option>
-                        </select>
-                    </div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart-coach" role="img" aria-label="Bar chart sesi per pelatih"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">Murid Paling Aktif</div>
-                    <div class="chart-subtitle">Frekuensi kehadiran (top 8)</div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart-students" role="img" aria-label="Bar chart frekuensi murid"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- INSIGHTS ROW -->
-            <p class="section-label">Insight Pembinaan</p>
-            <div class="insight-grid">
-                <div class="chart-card">
-                    <div class="chart-title">Top Materi Teratas</div>
-                    <div class="chart-subtitle">Fokus latihan yang paling sering diberikan</div>
-                    <div class="materi-tags" id="top-materi">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">Perlu Perhatian</div>
-                    <div class="chart-subtitle">Murid yang jarang hadir (30 hari terakhir)</div>
-                    <ul class="warning-list" id="low-attendance">
-                        <!-- Populated by JS -->
-                    </ul>
-                </div>
-            </div>
-
-            <!-- COACH SUMMARY -->
-            <p class="section-label">Rekap Pelatih</p>
-            <div class="coach-grid" id="coach-grid">
-                <!-- Populated by JS -->
-            </div>
-
-            <!-- SESSION LOG TABLE -->
-            <p class="section-label">Log Sesi Mengajar</p>
-            <div class="table-card">
-                <div class="table-header">
-                    <div>
-                        <div class="table-title">Seluruh Riwayat Sesi</div>
-                    </div>
-                    <span class="table-count" id="table-count">0 sesi</span>
-                </div>
-
-                <div class="filter-bar">
-                    <span class="filter-label">Filter:</span>
-                    <select class="filter-select" id="filter-coach" aria-label="Filter pelatih" onchange="applyFilter()">
-                        <option value="">Semua Pelatih</option>
-                    </select>
-                    <select class="filter-select" id="filter-location" aria-label="Filter lokasi" onchange="applyFilter()">
-                        <option value="">Semua Lokasi</option>
-                    </select>
-                </div>
-
-                <div class="table-scroll" role="region" aria-label="Tabel riwayat sesi">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Tgl & Waktu</th>
-                                <th>Pelatih</th>
-                                <th>Murid Hadir</th>
-                                <th>Materi</th>
-                                <th>Lokasi</th>
-                                <th>Catatan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="session-tbody">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-
-        </div><!-- end #dashboard-content -->
     </main>
 
     <script>
-    // ============================
-    // CONFIG
-    // ============================
-    const SHEET_ID = '1g-CK1eaLcslsOyp3ATMVX9I8gtRIFxiw9RcjOvlVSjw';
-    const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-
-    let allRows = [];
-    let chartCoach = null;
-    let chartStudents = null;
-    let chartTrend = null;
-    let chartLocation = null;
-    let chartDay = null;
-
-    // ============================
-    // PARSE GOOGLE DATE STRING
-    // ============================
-    function parseGDate(val) {
-        if (!val) return null;
-        const m = String(val).match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
-        if (!m) return null;
-        return new Date(+m[1], +m[2], +m[3], +(m[4]||0), +(m[5]||0), +(m[6]||0));
-    }
-
-    // ============================
-    // FORMAT HELPERS
-    // ============================
-    function fmtDate(d) {
-        if (!d) return '-';
-        return d.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
-    }
-
-    function fmtTime(d) {
-        if (!d) return '-';
-        return d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', hour12: false });
-    }
-
-    function getDurationMins(start, end) {
-        if (!start || !end) return 0;
-        return (end - start) / 60000;
-    }
-
-    function calcDuration(start, end) {
-        if (!start || !end) return '';
-        const diff = (end - start) / 60000;
-        if (diff <= 0) return '';
-        const h = Math.floor(diff / 60);
-        const m = diff % 60;
-        return h > 0 ? `${h}j ${m > 0 ? m+'m' : ''}` : `${m}m`;
-    }
-
-    function getInitial(name) {
-        return (name || '?').substring(0, 2).toUpperCase();
-    }
-
-    function parseStudents(raw) {
-        if (!raw) return [];
-        return raw.split(/[,،\n]/).map(s => s.trim()).filter(s => s.length > 0);
-    }
-
-    // ============================
-    // WEEKLY BOUNDARIES (Mon-Sun)
-    // ============================
-    function getWeekBoundaries() {
-        const now = new Date();
-        const day = now.getDay(); // 0 is Sunday
-        const diff = (day === 0 ? -6 : 1) - day; // Adjust to Monday
+        // ============================
+        // CONFIG & STATE
+        // ============================
+        const SHEET_ID = '1g-CK1eaLcslsOyp3ATMVX9I8gtRIFxiw9RcjOvlVSjw';
+        const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
         
-        const monday = new Date(now);
-        monday.setDate(now.getDate() + diff);
-        monday.setHours(0, 0, 0, 0);
-        
-        const sunday = new Date(monday);
-        sunday.setDate(monday.getDate() + 6);
-        sunday.setHours(23, 59, 59, 999);
-        
-        return { monday, sunday };
-    }
+        let allRows = [];
+        let filteredRows = [];
+        let chartTrend = null;
+        let chartDay = null;
 
-    function isThisWeek(d) {
-        if (!d) return false;
-        const { monday, sunday } = getWeekBoundaries();
-        return d >= monday && d <= sunday;
-    }
+        // Set Chart Defaults
+        Chart.defaults.color = '#42474e';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.plugins.tooltip.backgroundColor = '#00416A';
+        Chart.defaults.plugins.tooltip.titleFont = { family: "'Montserrat', sans-serif", weight: '700' };
 
-    // ============================
-    // MATERI SANITIZATION
-    // ============================
-    function sanitizeMateri(allData) {
-        const keywords = ['bebas', 'katak', 'dada', 'kupu-kupu', 'punggung', 'bubbling', 'meluncur', 'pernapasan', 'jumpstart', 'water trappen', 'tumble turn', 'kick', 'dolphin', 'floating', 'sculling', 'side kick', 'fin kick'];
-        const materiCounts = {};
-        
-        allData.forEach(r => {
-            if (r.materi) {
-                const text = r.materi.toLowerCase();
-                keywords.forEach(key => {
-                    if (text.includes(key)) {
-                        materiCounts[key] = (materiCounts[key] || 0) + 1;
-                    }
+        // ============================
+        // CORE LOGIC
+        // ============================
+        function parseGDate(val) {
+            if (!val) return null;
+            const m = String(val).match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
+            if (!m) return null;
+            return new Date(+m[1], +m[2], +m[3], +(m[4]||0), +(m[5]||0), +(m[6]||0));
+        }
+
+        function getDurationMins(start, end) {
+            if (!start || !end) return 0;
+            return (end - start) / 60000;
+        }
+
+        function formatMins(mins) {
+            if (!mins || mins <= 0) return '-';
+            const h = Math.floor(mins / 60);
+            const m = Math.round(mins % 60);
+            return h > 0 ? `${h}j ${m > 0 ? m+'m' : ''}` : `${m}m`;
+        }
+
+        function loadData(isInitial = true) {
+            if (isInitial) {
+                const cached = localStorage.getItem('nz_dash_data');
+                if (cached) {
+                    try {
+                        allRows = JSON.parse(cached).map(r => ({
+                            ...r,
+                            date: r.date ? new Date(r.date) : null,
+                            timestamp: r.timestamp ? new Date(r.timestamp) : null,
+                            startTime: r.startTime ? new Date(r.startTime) : null,
+                            endTime: r.endTime ? new Date(r.endTime) : null
+                        }));
+                        applyGlobalFilter();
+                        document.getElementById('loading-state').style.display = 'none';
+                        document.getElementById('dashboard-content').style.display = 'block';
+                    } catch(e) { console.error('Cache error', e); }
+                }
+            } else {
+                document.getElementById('loading-state').style.display = 'block';
+                document.getElementById('dashboard-content').style.display = 'none';
+            }
+
+            document.getElementById('error-state').style.display = 'none';
+
+            const callbackName = 'handleSheetsResponse';
+            window[callbackName] = function(json) {
+                if (json.status !== 'ok') { if(!allRows.length) showError(); return; }
+                
+                allRows = (json.table.rows || []).map(row => {
+                    const c = row.c || [];
+                    const studentsRaw = c[6]?.v || '';
+                    return {
+                        timestamp: parseGDate(c[0]?.v),
+                        coach: c[1]?.v || '',
+                        date: parseGDate(c[2]?.v),
+                        startTime: parseGDate(c[3]?.v),
+                        endTime: parseGDate(c[4]?.v),
+                        location: c[5]?.v || '',
+                        students: studentsRaw.split(/[,،\n]/).map(s=>s.trim()).filter(s=>s.length>0)
+                    };
                 });
-            }
-        });
-        
-        return Object.entries(materiCounts)
-            .map(([name, count]) => ({ name, count }))
-            .sort((a, b) => b.count - a.count);
-    }
+                
+                try { localStorage.setItem('nz_dash_data', JSON.stringify(allRows)); } catch(e){}
+                
+                applyGlobalFilter();
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
+            };
 
-
-    // ============================
-    // DATA MANAGEMENT & CACHING
-    // ============================
-    const CACHE_KEY = 'newz_dash_cache';
-    const CACHE_TIME_KEY = 'newz_dash_cache_time';
-    
-    // ============================
-    // LOAD DATA (Optimized: Cache-first then refresh)
-    // ============================
-    function loadData(isInitial = true) {
-        // 1. Coba ambil dari cache dulu jika ini load awal
-        if (isInitial) {
-            const cachedData = localStorage.getItem(CACHE_KEY);
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    // Pulihkan objek Date dari string JSON
-                    allRows = parsed.map(r => ({
-                        ...r,
-                        date: r.date ? new Date(r.date) : null,
-                        timestamp: r.timestamp ? new Date(r.timestamp) : null,
-                        startTime: r.startTime ? new Date(r.startTime) : null,
-                        endTime: r.endTime ? new Date(r.endTime) : null
-                    }));
-                    
-                    // Langsung render data lama biar instan
-                    // Update Chart Colors for Light Theme
-                    Chart.defaults.color = '#5f6c7b'; // Slate-600
-                    Chart.defaults.font.family = "'Inter', sans-serif";
-                    Chart.defaults.plugins.tooltip.backgroundColor = '#094067';
-                    Chart.defaults.plugins.tooltip.titleFont = { family: "'Montserrat', sans-serif", weight: '700' };
-                    Chart.defaults.elements.bar.borderRadius = 8;
-                    Chart.defaults.scale.grid.color = '#e2e8f0';
-                    Chart.defaults.scale.grid.drawTicks = false;
-                    
-                    renderDashboard(allRows);
-                    // Update label waktu cache
-                    const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
-                    if (cacheTime) {
-                        document.getElementById('last-updated-text').textContent = `Cache: ${cacheTime}`;
-                    }
-                    // Tampilkan loading kecil (bukan overlay) jika mau, tapi biarkan overlay saja
-                } catch(e) { console.error("Cache error", e); }
-            }
+            const script = document.createElement('script');
+            script.src = `${GVIZ_URL};responseHandler:${callbackName}`;
+            script.onerror = () => { if(!allRows.length) showError(); };
+            document.head.appendChild(script);
         }
 
-        // Jika tidak ada cache, tampilkan loading penuh
-        if (allRows.length === 0) {
-            document.getElementById('loading-state').style.display = 'flex';
-            document.getElementById('dashboard-content').style.display = 'none';
+        function showError() {
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'block';
         }
-        
-        document.getElementById('error-state').style.display = 'none';
-        document.getElementById('btn-refresh').disabled = true;
 
-        // 2. Ambil data segar dari Google Sheets
-        const callbackName = 'handleSheetsResponse';
-        window[callbackName] = function(json) {
-            delete window[callbackName];
-            const oldScript = document.getElementById('gviz-script');
-            if (oldScript) oldScript.remove();
+        // ============================
+        // FILTER & RENDER
+        // ============================
+        function applyGlobalFilter() {
+            const mode = document.getElementById('global-filter').value;
+            const now = new Date();
             
-            if (json.status !== 'ok') {
-                if (allRows.length === 0) showError(); // Hanya error jika tidak ada data sama sekali
+            filteredRows = allRows.filter(r => {
+                if (!r.date) return false;
+                if (mode === 'all') return true;
+                
+                if (mode === 'month') {
+                    return r.date.getMonth() === now.getMonth() && r.date.getFullYear() === now.getFullYear();
+                }
+                
+                if (mode === 'week') {
+                    const day = now.getDay();
+                    const diff = (day === 0 ? -6 : 1) - day;
+                    const monday = new Date(now);
+                    monday.setDate(now.getDate() + diff);
+                    monday.setHours(0,0,0,0);
+                    const sunday = new Date(monday);
+                    sunday.setDate(monday.getDate() + 6);
+                    sunday.setHours(23,59,59,999);
+                    return r.date >= monday && r.date <= sunday;
+                }
+                return true;
+            });
+            
+            updateKPIs();
+            renderCharts();
+            renderPayroll();
+            renderCoachExpand();
+            renderLog();
+        }
+
+        function updateKPIs() {
+            const coaches = new Set(filteredRows.map(r => r.coach).filter(Boolean));
+            const students = new Set(filteredRows.flatMap(r => r.students));
+            
+            let totalMins = 0;
+            filteredRows.forEach(r => {
+                const m = getDurationMins(r.startTime, r.endTime);
+                if(m > 0 && m < 600) totalMins += m;
+            });
+            
+            document.getElementById('kpi-sesi').textContent = filteredRows.length;
+            document.getElementById('kpi-coach').textContent = coaches.size;
+            document.getElementById('kpi-murid').textContent = students.size;
+            
+            const h = Math.floor(totalMins / 60);
+            document.getElementById('kpi-jam').textContent = `${h}j`;
+        }
+
+        // ============================
+        // TABS
+        // ============================
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // ============================
+        // TAB 1: CHARTS
+        // ============================
+        function renderCharts() {
+            // Trend 30 Hari (Use allRows to always show 30 days regardless of filter)
+            const today = new Date();
+            const thirtyAgo = new Date(today);
+            thirtyAgo.setDate(today.getDate() - 30);
+            
+            const trendData = {};
+            for(let i=29; i>=0; i--){
+                let d = new Date(today); d.setDate(d.getDate() - i);
+                trendData[d.toLocaleDateString('id-ID', {month:'short', day:'numeric'})] = 0;
+            }
+            
+            allRows.forEach(r => {
+                if(r.date && r.date >= thirtyAgo) {
+                    const lbl = r.date.toLocaleDateString('id-ID', {month:'short', day:'numeric'});
+                    if(trendData[lbl] !== undefined) trendData[lbl]++;
+                }
+            });
+
+            if(chartTrend) chartTrend.destroy();
+            chartTrend = new Chart(document.getElementById('chart-trend'), {
+                type: 'line',
+                data: {
+                    labels: Object.keys(trendData),
+                    datasets: [{
+                        label: 'Sesi', data: Object.values(trendData),
+                        borderColor: '#00B4D8', backgroundColor: 'rgba(0, 180, 216, 0.1)',
+                        borderWidth: 2, fill: true, pointRadius: 1, pointHoverRadius: 5
+                    }]
+                },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}, ticks:{maxTicksLimit:8}}, y:{beginAtZero:true, ticks:{stepSize:1}}} }
+            });
+
+            // Weekly Day (Use filteredRows)
+            const dayCounts = [0,0,0,0,0,0,0];
+            filteredRows.forEach(r => { if(r.date) dayCounts[r.date.getDay()]++; });
+            const dayData = [dayCounts[1], dayCounts[2], dayCounts[3], dayCounts[4], dayCounts[5], dayCounts[6], dayCounts[0]];
+            
+            if(chartDay) chartDay.destroy();
+            chartDay = new Chart(document.getElementById('chart-day'), {
+                type: 'bar',
+                data: {
+                    labels: ['Sen','Sel','Rab','Kam','Jum','Sab','Min'],
+                    datasets: [{ label:'Sesi', data: dayData, backgroundColor: '#FF7F50', borderRadius: 4 }]
+                },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{beginAtZero:true, ticks:{stepSize:1}}} }
+            });
+        }
+
+        // ============================
+        // TAB 2: PAYROLL
+        // ============================
+        function renderPayroll() {
+            const stats = {};
+            filteredRows.forEach(r => {
+                if(!r.coach) return;
+                if(!stats[r.coach]) stats[r.coach] = { sessions:0, mins:0, students:new Set() };
+                
+                stats[r.coach].sessions++;
+                stats[r.coach].students.add(...r.students);
+                const m = getDurationMins(r.startTime, r.endTime);
+                if(m > 0 && m < 600) stats[r.coach].mins += m;
+            });
+
+            const sorted = Object.entries(stats).sort((a,b) => b[1].sessions - a[1].sessions);
+            const tbody = document.getElementById('payroll-tbody');
+            tbody.innerHTML = '';
+            
+            if(sorted.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--on-surface-variant)">Tidak ada data sesi di periode ini.</td></tr>`;
                 return;
             }
-            processData(json.table.rows);
-        };
 
-        const script = document.createElement('script');
-        script.id = 'gviz-script';
-        
-        // Timer timeout: Jika 10 detik tidak ada respon, anggap gagal
-        const timeoutLoad = setTimeout(() => {
-            if (window[callbackName]) {
-                console.warn("Loading timeout reached");
-                delete window[callbackName];
-                script.remove();
-                if (allRows.length === 0) showError();
-                else {
-                    document.getElementById('loading-state').style.display = 'none';
-                    document.getElementById('dashboard-content').style.display = 'block';
-                }
-            }
-        }, 10000);
-
-        // Perbaikan: Gunakan titik koma (;) untuk menggabung sub-parameter tqx
-        script.src = `${GVIZ_URL};responseHandler:${callbackName}`;
-        
-        const originalCallback = window[callbackName];
-        window[callbackName] = function(json) {
-            clearTimeout(timeoutLoad);
-            originalCallback(json);
-        };
-
-        script.onerror = () => { 
-            clearTimeout(timeoutLoad);
-            if (allRows.length === 0) showError(); 
-        };
-        document.head.appendChild(script);
-    }
-
-    function showError() {
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('error-state').style.display = 'flex';
-        document.getElementById('btn-refresh').disabled = false;
-    }
-
-    function processData(rows) {
-        allRows = (rows || []).map(row => {
-            const c = (row.c || []);
-            return {
-                timestamp:  parseGDate(c[0]?.v),
-                coach:      c[1]?.v || '',
-                date:       parseGDate(c[2]?.v),
-                startTime:  parseGDate(c[3]?.v),
-                endTime:    parseGDate(c[4]?.v),
-                location:   c[5]?.v || '',
-                students:   parseStudents(c[6]?.v),
-                materi:     c[7]?.v || '',
-                notes:      c[8]?.v || '',
-            };
-        });
-
-        // Simpan ke Cache untuk kunjungan berikutnya
-        try {
-            localStorage.setItem(CACHE_KEY, JSON.stringify(allRows));
-            const nowTime = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
-            localStorage.setItem(CACHE_TIME_KEY, nowTime);
-        } catch(e) {}
-
-        // Render data segar ke UI
-        renderDashboard(allRows);
-
-        const now = new Date();
-        document.getElementById('last-updated-text').textContent =
-            'Update: ' + now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
-        
-        document.getElementById('btn-refresh').disabled = false;
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('dashboard-content').style.display = 'block';
-    }
-
-    // ============================
-    // RENDER DASHBOARD
-    // ============================
-    function renderDashboard(data) {
-        // Prepare filter weekly
-        const viewMode = document.getElementById('filter-coach-time')?.value || 'week';
-        const filteredByTime = viewMode === 'week' ? data.filter(r => isThisWeek(r.date)) : data;
-
-        // --- STATS ---
-        const today = new Date();
-        const todayStr = today.toDateString();
-
-        const uniqueCoaches = [...new Set(data.map(r => r.coach).filter(Boolean))];
-        const allStudents = data.flatMap(r => r.students);
-        const uniqueStudents = [...new Set(allStudents.map(s => s.toLowerCase().trim()))];
-        const todaySessions = data.filter(r => r.date && r.date.toDateString() === todayStr);
-
-        let totalDuration = 0;
-        let validDurationCount = 0;
-        data.forEach(r => {
-            const mins = getDurationMins(r.startTime, r.endTime);
-            if (mins > 0 && mins < 600) { totalDuration += mins; validDurationCount++; }
-        });
-        const avgMins = validDurationCount > 0 ? Math.round(totalDuration / validDurationCount) : 0;
-        const avgH = Math.floor(avgMins / 60);
-        const avgM = avgMins % 60;
-
-        document.getElementById('stat-sessions').textContent = filteredByTime.length;
-        document.getElementById('stat-coaches').textContent = uniqueCoaches.length;
-        document.getElementById('stat-students').textContent = uniqueStudents.length;
-
-
-        // --- POPULATE FILTERS ---
-        const coachSelect = document.getElementById('filter-coach');
-        const locSelect = document.getElementById('filter-location');
-        const uniqueLocations = [...new Set(data.map(r => r.location).filter(Boolean))];
-
-        while (coachSelect.options.length > 1) coachSelect.remove(1);
-        while (locSelect.options.length > 1) locSelect.remove(1);
-
-        uniqueCoaches.sort().forEach(c => {
-            const o = document.createElement('option');
-            o.value = c; o.textContent = c;
-            coachSelect.appendChild(o);
-        });
-
-        uniqueLocations.sort().forEach(l => {
-            const o = document.createElement('option');
-            o.value = l; o.textContent = l;
-            locSelect.appendChild(o);
-        });
-
-        // --- CHART: TREN SESI (30 HARI TERAKHIR) ---
-        const thirtyDaysAgo = new Date(today);
-        thirtyDaysAgo.setDate(today.getDate() - 30);
-        
-        const trendData = {};
-        for (let i = 29; i >= 0; i--) {
-            let d = new Date(today);
-            d.setDate(d.getDate() - i);
-            trendData[d.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' })] = 0;
-        }
-
-        const last30Data = data.filter(r => r.date && r.date >= thirtyDaysAgo);
-        last30Data.forEach(r => {
-            const label = r.date.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' });
-            if (trendData[label] !== undefined) trendData[label]++;
-        });
-
-        if (chartTrend) chartTrend.destroy();
-        chartTrend = new Chart(document.getElementById('chart-trend').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: Object.keys(trendData),
-                datasets: [{
-                    label: 'Sesi',
-                    data: Object.values(trendData),
-                    borderColor: 'rgba(61,169,252,1)',
-                    backgroundColor: 'rgba(61,169,252,0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 2,
-                    pointHoverRadius: 5
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                scales: { 
-                    x: { ticks: { maxTicksLimit: 10, font: {size:10} }, grid: { display: false } },
-                    y: { beginAtZero: true, ticks: { stepSize:1, font: {size:10} } }
-                }
-            }
-        });
-
-        // --- CHART: DISTRIBUSI LOKASI ---
-        const locCounts = {};
-        data.forEach(r => { if(r.location) locCounts[r.location] = (locCounts[r.location] || 0) + 1; });
-        if (chartLocation) chartLocation.destroy();
-        chartLocation = new Chart(document.getElementById('chart-location').getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(locCounts),
-                datasets: [{
-                    data: Object.values(locCounts),
-                    backgroundColor: ['#3da9fc', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'],
-                    borderWidth: 0
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: {size:11} } } } }
-        });
-
-        // --- CHART: SESI PER HARI ---
-        const dayCounts = [0,0,0,0,0,0,0];
-        data.forEach(r => { if(r.date) dayCounts[r.date.getDay()]++; });
-        const dayLabels = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
-        const dayDataArr = [dayCounts[1], dayCounts[2], dayCounts[3], dayCounts[4], dayCounts[5], dayCounts[6], dayCounts[0]];
-        
-        if (chartDay) chartDay.destroy();
-        chartDay = new Chart(document.getElementById('chart-day').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: dayLabels,
-                datasets: [{
-                    label: 'Total Sesi',
-                    data: dayDataArr,
-                    backgroundColor: 'rgba(245, 158, 11, 0.7)',
-                    borderColor: 'rgba(245, 158, 11, 1)',
-                    borderWidth: 1,
-                    borderRadius: 4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                scales: { 
-                    x: { grid: { display: false }, ticks: { font: {size:10} } }, 
-                    y: { beginAtZero: true, ticks: { stepSize: 1, font: {size:10} } } 
-                } 
-            }
-        });
-
-        // --- CHART: Sesi & Jam per Pelatih (Filtered) ---
-        const coachStats = {};
-        filteredByTime.forEach(r => { 
-            if (r.coach) {
-                if (!coachStats[r.coach]) coachStats[r.coach] = { sessions: 0, minutes: 0 };
-                coachStats[r.coach].sessions++;
-                const mins = getDurationMins(r.startTime, r.endTime);
-                if (mins > 0 && mins < 600) coachStats[r.coach].minutes += mins;
-            }
-        });
-        
-        const coachSorted = Object.entries(coachStats)
-            .sort((a,b) => b[1].sessions - a[1].sessions);
-
-        if (chartCoach) chartCoach.destroy();
-        chartCoach = new Chart(document.getElementById('chart-coach').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: coachSorted.map(([c]) => c),
-                datasets: [
-                    {
-                        label: 'Sesi',
-                        data: coachSorted.map(([,stats]) => stats.sessions),
-                        backgroundColor: 'rgba(61,169,252,0.7)',
-                        borderColor: 'rgba(61,169,252,1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                    },
-                    {
-                        label: 'Jam',
-                        data: coachSorted.map(([,stats]) => (stats.minutes / 60).toFixed(1)),
-                        backgroundColor: 'rgba(16,185,129,0.7)',
-                        borderColor: 'rgba(16,185,129,1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                    }
-                ]
-            },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false, 
-                plugins: { 
-                    legend: { display: true, position: 'bottom', labels: { boxWidth: 12, font: {size:11} } },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label === 'Jam') return label + ': ' + context.raw + ' jam';
-                                return label + ': ' + context.raw + ' sesi';
-                            }
-                        }
-                    }
-                },
-                scales: { 
-                    x: { ticks: { font: { size: 10, weight: '600' } } }, 
-                    y: { ticks: { font: { size: 10 }, stepSize: 2 }, beginAtZero: true } 
-                }
-            }
-        });
-
-        // --- CHART: Murid Aktif ---
-        const studentCounts = {};
-        allStudents.forEach(s => {
-            const key = s.toLowerCase().trim();
-            studentCounts[key] = (studentCounts[key] || 0) + 1;
-        });
-        const studentSorted = Object.entries(studentCounts).sort((a,b) => b[1]-a[1]).slice(0, 8);
-        const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
-
-        if (chartStudents) chartStudents.destroy();
-        chartStudents = new Chart(document.getElementById('chart-students').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: studentSorted.map(([s]) => capitalize(s)),
-                datasets: [{
-                    label: 'Kehadiran',
-                    data: studentSorted.map(([,n]) => n),
-                    backgroundColor: 'rgba(16,185,129,0.7)',
-                    borderColor: 'rgba(16,185,129,1)',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    hoverBackgroundColor: 'rgba(16,185,129,0.9)'
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } },
-                scales: { x: { ticks: { font: { size: 11, weight: '600' }, stepSize: 1 }, beginAtZero: true }, y: { ticks: { font: { size: 11, weight: '600' } }, grid: { display: false } } }
-            }
-        });
-
-        // --- INSIGHT: TOP MATERI (Sanitized) ---
-        const sanitizedMateri = sanitizeMateri(data);
-        document.getElementById('top-materi').innerHTML = sanitizedMateri.length > 0 
-            ? sanitizedMateri.map(({name, count}) => `<span class="materi-tag"><span style="text-transform:capitalize;">${name}</span> <span class="materi-count">${count}</span></span>`).join('')
-            : '<span class="text-muted">Materi belum cukup spesifik dicatat</span>';
-
-
-        // --- INSIGHT: LOW ATTENDANCE ---
-        const student30Counts = {};
-        last30Data.forEach(r => { r.students.forEach(s => { const ky = s.toLowerCase().trim(); student30Counts[ky] = (student30Counts[ky] || 0) + 1; }); });
-        const allStudentKeys = [...new Set(allStudents.map(s => s.toLowerCase().trim()))];
-        
-        const latestSeenMap = {};
-        data.forEach(r => {
-            if (r.date) {
-                r.students.forEach(s => {
-                    const k = s.toLowerCase().trim();
-                    if (!latestSeenMap[k] || r.date > latestSeenMap[k]) { latestSeenMap[k] = r.date; }
-                });
-            }
-        });
-        
-        const lowAttHtml = allStudentKeys.map(s => { return { name: s, count: student30Counts[s] || 0, last: latestSeenMap[s] }; })
-          .filter(x => x.count < 2)
-          .sort((a,b) => (a.last || 0) - (b.last || 0))
-          .slice(0, 10).map(x => `
-            <li class="warning-item">
-                <div class="warning-name" style="text-transform:capitalize;">${x.name}</div>
-                <div class="warning-desc">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    Hadir ${x.count}x bln ini
-                </div>
-            </li>
-          `).join('');
-        document.getElementById('low-attendance').innerHTML = lowAttHtml || '<p style="font-size:0.8rem; color:var(--text-muted); padding: 1rem 0;">Semua murid aktif (Hadir > 1x)</p>';
-
-        // --- COACH CARDS (Filtered) ---
-        const coachGrid = document.getElementById('coach-grid');
-        coachGrid.innerHTML = '';
-        
-        // Use filteredByTime for the sessions overview cards
-        coachSorted.forEach(([coach, stats]) => {
-            const sessions = stats.sessions;
-            const coachRows = filteredByTime.filter(r => r.coach === coach);
-            const studentSet = new Set(coachRows.flatMap(r => r.students.map(s => s.toLowerCase().trim())));
-            
-            let totalStu = coachRows.reduce((sum, r) => sum + r.students.length, 0);
-            const avgStu = sessions > 0 ? (totalStu / sessions).toFixed(1) : 0;
-            
-            let tMins = 0;
-            coachRows.forEach(r => {
-                let m = getDurationMins(r.startTime, r.endTime);
-                if (m > 0 && m < 600) tMins += m;
+            sorted.forEach(([coach, st]) => {
+                const avgMins = st.sessions ? st.mins / st.sessions : 0;
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:600; color:var(--primary);">${coach}</td>
+                        <td>${st.sessions}</td>
+                        <td><span class="badge badge-navy">${formatMins(st.mins)}</span></td>
+                        <td>${formatMins(avgMins)}</td>
+                        <td>${st.students.size} murid</td>
+                    </tr>
+                `;
             });
-            const ah = Math.floor(tMins / 60); const am = Math.round(tMins % 60);
-            const totalDurStr = ah > 0 ? `${ah}j ${am}m` : `${am}m`;
-
-            const card = document.createElement('div');
-            card.className = 'coach-card';
-            card.innerHTML = `
-                <div class="coach-avatar">${getInitial(coach)}</div>
-                <div class="coach-info">
-                    <div class="coach-name" title="${coach}">${coach}</div>
-                    <div class="coach-stats" style="margin-top: 0.5rem; justify-content: space-between;">
-                        <div class="coach-stat"><span>${sessions}</span> sesi</div>
-                        <div class="coach-stat"><span>${studentSet.size}</span> murid</div>
-                    </div>
-                    <div class="coach-stats" style="margin-top: 0.25rem; justify-content: space-between;">
-                        <div class="coach-stat" style="font-size: 0.7rem;">Grup: <span>${avgStu}</span> mrd/sesi</div>
-                        <div class="coach-stat" style="font-size: 0.7rem;">Total Jam: <span>${tMins > 0 ? totalDurStr : '-'}</span></div>
-                    </div>
-                </div>
-            `;
-            coachGrid.appendChild(card);
-        });
-
-
-        // --- TABLE ---
-        renderTable(data);
-
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('dashboard-content').style.display = 'block';
-    }
-
-    // ============================
-    // RENDER TABLE
-    // ============================
-    function renderTable(data) {
-        const tbody = document.getElementById('session-tbody');
-        tbody.innerHTML = '';
-
-        // Sort newest first: Prioritize exact timestamp over general date
-        const sorted = [...data].sort((a, b) => {
-            const timeA = (a.timestamp || a.date || 0);
-            const timeB = (b.timestamp || b.date || 0);
-            return timeB - timeA;
-        });
-
-        document.getElementById('table-count').textContent = `${sorted.length} sesi`;
-
-        if (sorted.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 2rem;">Tidak ada data ditemukan</td></tr>`;
-            return;
         }
 
-        sorted.forEach(row => {
-            const duration = calcDuration(row.startTime, row.endTime);
-            const studentPills = row.students.map(s =>
-                `<span class="student-pill">${s.trim()}</span>`
-            ).join('');
+        // ============================
+        // TAB 3: COACH EXPANDABLE
+        // ============================
+        function renderCoachExpand() {
+            const coaches = [...new Set(filteredRows.map(r=>r.coach).filter(Boolean))].sort();
+            const grid = document.getElementById('coach-expand-grid');
+            grid.innerHTML = '';
 
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>
-                    <span class="time-display">${fmtDate(row.date)}</span>
-                    <span class="duration-badge">
-                        ${row.startTime ? fmtTime(row.startTime) : ''}${row.endTime ? ' – ' + fmtTime(row.endTime) : ''}
-                        ${duration ? ' (' + duration + ')' : ''}
-                    </span>
-                </td>
-                <td><span class="coach-badge">${row.coach || '-'}</span></td>
-                <td>
-                    <div class="student-pills">${studentPills || '<span style="color:var(--text-muted)">-</span>'}</div>
-                </td>
-                <td><div class="materi-text">${row.materi || '-'}</div></td>
-                <td>
-                    <span class="location-badge">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        ${row.location || '-'}
-                    </span>
-                </td>
-                <td><div class="notes-cell">${row.notes || '-'}</div></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+            if(coaches.length === 0) {
+                grid.innerHTML = `<p style="text-align:center; color:var(--on-surface-variant); padding:2rem;">Tidak ada data pelatih di periode ini.</p>`;
+                return;
+            }
 
-    // ============================
-    // FILTER
-    // ============================
-    function applyFilter() {
-        const coach = document.getElementById('filter-coach').value;
-        const loc = document.getElementById('filter-location').value;
+            coaches.forEach(coach => {
+                const rows = filteredRows.filter(r => r.coach === coach);
+                let tMins = 0;
+                const studentCounts = {};
+                
+                rows.forEach(r => {
+                    const m = getDurationMins(r.startTime, r.endTime);
+                    if(m>0 && m<600) tMins += m;
+                    r.students.forEach(s => {
+                        const ky = s.toLowerCase();
+                        studentCounts[ky] = (studentCounts[ky] || {name:s, cnt:0});
+                        studentCounts[ky].cnt++;
+                    });
+                });
 
-        let filtered = allRows;
-        if (coach) filtered = filtered.filter(r => r.coach === coach);
-        if (loc) filtered = filtered.filter(r => r.location === loc);
+                const stuHtml = Object.values(studentCounts)
+                    .sort((a,b) => b.cnt - a.cnt)
+                    .map(s => `<div class="s-tag">${s.name} <span class="s-count">${s.cnt}x</span></div>`)
+                    .join('');
 
-        renderTable(filtered);
-    }
+                grid.innerHTML += `
+                    <div class="coach-expand-card" onclick="this.classList.toggle('open')">
+                        <div class="ce-header">
+                            <div class="ce-info">
+                                <div class="ce-avatar">${coach.substring(0,2).toUpperCase()}</div>
+                                <div>
+                                    <div class="ce-name">${coach}</div>
+                                    <div class="ce-stats">
+                                        <span>${rows.length} Sesi</span> • <span>${formatMins(tMins)} Jam</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ce-toggle">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
+                        <div class="ce-body" onclick="event.stopPropagation()">
+                            <p style="font-size:0.8rem; font-weight:600; color:var(--primary); margin-bottom:0.75rem; text-transform:uppercase;">Daftar Murid Diajar</p>
+                            <div class="student-list">${stuHtml || '<span style="color:var(--on-surface-variant);font-size:0.8rem;">Belum ada murid</span>'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
 
-    // ============================
-    // INIT
-    // ============================
-    window.addEventListener('DOMContentLoaded', () => {
-        loadData();
-    });
+        // ============================
+        // TAB 4: LOG SESI
+        // ============================
+        function renderLog() {
+            const tbody = document.getElementById('log-tbody');
+            tbody.innerHTML = '';
+            
+            const sorted = [...filteredRows].sort((a,b) => (b.timestamp||b.date||0) - (a.timestamp||a.date||0));
+            
+            if(sorted.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--on-surface-variant)">Tidak ada log sesi di periode ini.</td></tr>`;
+                return;
+            }
+
+            sorted.forEach(r => {
+                const dDate = r.date ? r.date.toLocaleDateString('id-ID', {day:'2-digit', month:'short'}) : '-';
+                const ts = r.startTime ? r.startTime.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) : '';
+                const te = r.endTime ? r.endTime.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) : '';
+                const dur = formatMins(getDurationMins(r.startTime, r.endTime));
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div style="font-weight:600;">${dDate}</div>
+                            <div style="font-size:0.75rem; color:var(--on-surface-variant);">${ts}${te?' - '+te:''}</div>
+                        </td>
+                        <td><span class="badge badge-teal">${r.coach || '-'}</span></td>
+                        <td>${dur}</td>
+                        <td><div style="display:flex; flex-wrap:wrap; gap:0.25rem;">${r.students.map(s => `<span style="font-size:0.75rem; background:white; border:1px solid var(--outline-variant); padding:0.1rem 0.4rem; border-radius:4px;">${s}</span>`).join('')}</div></td>
+                        <td>${r.location || '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ============================
+        // INIT
+        // ============================
+        window.addEventListener('DOMContentLoaded', () => loadData(true));
     </script>
 </body>
 </html>
