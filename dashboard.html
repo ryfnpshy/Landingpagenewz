@@ -220,8 +220,7 @@
         .tab-btn:hover { color: var(--primary); }
         .tab-btn.active { background: var(--surface-container-lowest); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        .tab-panel { display: none; animation: fadeIn 0.3s ease; }
-        .tab-panel.active { display: block; }
+        .tab-panel { animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ===== CHARTS ===== */
@@ -281,8 +280,7 @@
         .ce-stats span { font-weight: 600; color: var(--on-surface); }
         .ce-toggle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--surface-container); transition: transform 0.3s; }
         .coach-expand-card.open .ce-toggle { transform: rotate(180deg); }
-        .ce-body { border-top: 1px solid var(--surface-container); padding: 1.25rem; display: none; background: var(--surface-container-low); }
-        .coach-expand-card.open .ce-body { display: block; }
+        .ce-body { border-top: 1px solid var(--surface-container); padding: 1.25rem; background: var(--surface-container-low); }
         
         .student-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
         .s-tag { background: white; border: 1px solid var(--outline-variant); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; color: var(--on-surface); display: flex; align-items: center; gap: 0.5rem;}
@@ -316,8 +314,12 @@
                     <div class="dash-logo-sub">Payroll & Operations</div>
                 </div>
             </a>
-            <div class="header-controls">
-                <select id="global-filter" class="global-filter" onchange="applyGlobalFilter()">
+            <div class="header-controls" x-data="{ filterMode: 'week' }">
+                <a href="index.html" class="btn-back-home" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem; background: var(--surface-container); color: var(--primary); padding: 0.5rem 1rem; border-radius: var(--radius-xl); font-size: 0.85rem; font-weight: 600; transition: all 0.2s;">
+                    <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    <span>Ke Beranda</span>
+                </a>
+                <select id="global-filter" class="global-filter" x-model="filterMode" @change="applyGlobalFilter()">
                     <option value="week" selected>Minggu Ini</option>
                     <option value="month">Bulan Ini</option>
                     <option value="all">Semua Waktu</option>
@@ -363,15 +365,16 @@
             </div>
 
             <!-- TABS -->
+            <div x-data="{ activeTab: 'tab-overview' }">
             <div class="tab-nav">
-                <button class="tab-btn active" onclick="switchTab('tab-overview')">Overview</button>
-                <button class="tab-btn" onclick="switchTab('tab-payroll')">Penggajian</button>
-                <button class="tab-btn" onclick="switchTab('tab-coach')">Data Coach</button>
-                <button class="tab-btn" onclick="switchTab('tab-log')">Log Sesi</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'tab-overview' }" @click="activeTab = 'tab-overview'">Overview</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'tab-payroll' }" @click="activeTab = 'tab-payroll'">Penggajian</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'tab-coach' }" @click="activeTab = 'tab-coach'">Data Coach</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'tab-log' }" @click="activeTab = 'tab-log'">Log Sesi</button>
             </div>
 
             <!-- TAB 1: OVERVIEW -->
-            <div id="tab-overview" class="tab-panel active">
+            <div id="tab-overview" class="tab-panel" x-show="activeTab === 'tab-overview'" x-transition>
                 <div class="chart-grid">
                     <div class="card">
                         <div class="card-title">Tren Latihan (30 Hari)</div>
@@ -387,7 +390,7 @@
             </div>
 
             <!-- TAB 2: PENGGAJIAN -->
-            <div id="tab-payroll" class="tab-panel">
+            <div id="tab-payroll" class="tab-panel" x-show="activeTab === 'tab-payroll'" x-transition>
                 <div class="card" style="padding:0;">
                     <div style="padding:1.5rem; border-bottom:1px solid var(--surface-container);">
                         <div class="card-title">Rekap Penggajian Coach</div>
@@ -411,12 +414,12 @@
             </div>
 
             <!-- TAB 3: DATA COACH -->
-            <div id="tab-coach" class="tab-panel">
+            <div id="tab-coach" class="tab-panel" x-show="activeTab === 'tab-coach'" x-transition>
                 <div class="coach-grid" id="coach-expand-grid"></div>
             </div>
 
             <!-- TAB 4: LOG SESI -->
-            <div id="tab-log" class="tab-panel">
+            <div id="tab-log" class="tab-panel" x-show="activeTab === 'tab-log'" x-transition>
                 <div class="card" style="padding:0;">
                     <div style="padding:1.5rem; border-bottom:1px solid var(--surface-container);">
                         <div class="card-title">Log Seluruh Sesi</div>
@@ -439,6 +442,7 @@
                 </div>
             </div>
 
+            </div><!-- end Alpine tab wrapper -->
         </div>
     </main>
 
@@ -597,17 +601,6 @@
         }
 
         // ============================
-        // TABS
-        // ============================
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        // ============================
         // TAB 1: CHARTS
         // ============================
         function renderCharts() {
@@ -731,8 +724,8 @@
                     .join('');
 
                 grid.innerHTML += `
-                    <div class="coach-expand-card" onclick="this.classList.toggle('open')">
-                        <div class="ce-header">
+                    <div class="coach-expand-card" x-data="{ open: false }" :class="{ open: open }">
+                        <div class="ce-header" @click="open = !open">
                             <div class="ce-info">
                                 <div class="ce-avatar">${coach.substring(0,2).toUpperCase()}</div>
                                 <div>
@@ -746,13 +739,14 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                             </div>
                         </div>
-                        <div class="ce-body" onclick="event.stopPropagation()">
+                        <div class="ce-body" x-show="open" x-transition>
                             <p style="font-size:0.8rem; font-weight:600; color:var(--primary); margin-bottom:0.75rem; text-transform:uppercase;">Daftar Murid Diajar</p>
                             <div class="student-list">${stuHtml || '<span style="color:var(--on-surface-variant);font-size:0.8rem;">Belum ada murid</span>'}</div>
                         </div>
                     </div>
                 `;
             });
+            Alpine.initTree(grid);
         }
 
         // ============================
@@ -795,5 +789,6 @@
         // ============================
         window.addEventListener('DOMContentLoaded', () => loadData(true));
     </script>
+    <script src="node_modules/alpinejs/dist/cdn.min.js" defer></script>
 </body>
 </html>

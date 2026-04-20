@@ -1,8 +1,19 @@
+// Auth Password Configuration
+window.AUTH_CONFIG = {
+    'newzswimming': 'absensi/index.html',
+    'admin123': 'dashboard.html'
+};
+
+window.checkAuthPassword = function(pwd) {
+    if (window.AUTH_CONFIG[pwd]) {
+        return window.AUTH_CONFIG[pwd];
+    }
+    return false;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const header = document.getElementById('header');
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
     const counters = document.querySelectorAll('.achievement-number');
 
     // Sticky Header
@@ -12,27 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             header.classList.remove('scrolled');
         }
-    });
-
-    // Mobile Menu Toggle
-    const toggleMenu = () => {
-        const isActive = hamburger.classList.contains('active');
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.classList.toggle('menu-open');
-        hamburger.setAttribute('aria-expanded', !isActive);
-    };
-
-    hamburger.addEventListener('click', toggleMenu);
-
-    // Close mobile menu when clicking any link inside
-    navMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            document.body.classList.remove('menu-open');
-            hamburger.setAttribute('aria-expanded', 'false');
-        });
     });
 
     // Count Up Animation
@@ -109,119 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
             closeLightbox();
         }
     });
-
-    // Coach Profile Modal Logic
-    const coachCards = document.querySelectorAll('.team-card');
-    const coachModal = document.getElementById('coach-modal');
-    const modalImg = document.getElementById('modal-img');
-    const modalName = document.getElementById('modal-name');
-    const modalRole = document.getElementById('modal-role');
-    const modalDesc = document.getElementById('modal-desc');
-    const closeModal = document.querySelector('.close-modal');
-
-    // Check if modal elements exist to avoid errors
-    if (coachModal && coachCards.length > 0) {
-        coachCards.forEach(card => {
-            card.addEventListener('click', () => {
-                // Populate Modal Data
-                const img = card.querySelector('img').src;
-                const name = card.getAttribute('data-name');
-                const role = card.getAttribute('data-role');
-                const desc = card.getAttribute('data-desc');
-
-                modalImg.src = img;
-                modalName.innerText = name;
-                modalRole.innerText = role;
-                modalDesc.innerText = desc || "Pelatih profesional yang berdedikasi tinggi.";
-
-                // Show Modal
-                coachModal.classList.add('active');
-            });
-        });
-
-        // Close Modal Logic
-        closeModal.addEventListener('click', () => {
-            coachModal.classList.remove('active');
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target == coachModal) {
-                coachModal.classList.remove('active');
-            }
-        });
-    }
-
-
-    // Password Protection Logic for Absensi & Dashboard
-    const btnAbsensi = document.getElementById('btn-absensi');
-    const passwordModal = document.getElementById('password-modal');
-    const passwordInput = document.getElementById('absensi-password');
-    const submitBtn = document.getElementById('submit-password');
-    const closePassModal = document.querySelector('.close-password-modal');
-    const passwordError = document.getElementById('password-error');
-
-    const CORRECT_PASSWORD = 'newzswimming';
-    // Google Apps Script URL — cannot be embedded in iframe (X-Frame-Options: DENY)
-    // Opens in new tab instead
-    const ABSENSI_URL = 'https://script.google.com/macros/s/AKfycbwxFQf-l3bvEWcExkDHYGvEkAJSklVx3Pwt1KDn4YJYSj4G7K5iBP2TxjxddwR11t7c/exec';
-
-    if (btnAbsensi) {
-        btnAbsensi.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Reset modal state
-            passwordInput.value = '';
-            passwordError.style.display = 'none';
-            submitBtn.style.display = 'block';
-            passwordInput.style.display = 'block';
-            
-            passwordModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; 
-            setTimeout(() => passwordInput.focus(), 100);
-        });
-
-        closePassModal.addEventListener('click', () => {
-            passwordModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        // Trigger on click
-        submitBtn.addEventListener('click', checkPass);
-        
-        // Trigger on enter key
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkPass();
-        });
-
-        function checkPass() {
-            const enteredPass = passwordInput.value;
-            
-            if (enteredPass === CORRECT_PASSWORD) {
-                // Mode Absensi: Buka GAS di tab baru
-                // (Tidak bisa di-embed iframe karena Google memblokir via X-Frame-Options: DENY)
-                passwordModal.classList.remove('active');
-                document.body.style.overflow = '';
-                window.open(ABSENSI_URL, '_blank', 'noopener,noreferrer');
-            } else if (enteredPass === 'admin123') {
-                // Mode Admin: Langsung redirect ke dashboard.html
-                passwordModal.classList.remove('active');
-                document.body.style.overflow = '';
-                window.location.href = 'dashboard.html';
-            } else {
-                // Salah Password
-                passwordError.style.display = 'block';
-                passwordInput.classList.add('shake');
-                setTimeout(() => passwordInput.classList.remove('shake'), 400);
-            }
-        }
-
-
-        window.addEventListener('click', (e) => {
-            if (e.target == passwordModal) {
-                passwordModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-    }
 
     console.log("Club Renang Scripts Loaded");
 });

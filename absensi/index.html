@@ -1,57 +1,495 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mengalihkan ke Absensi...</title>
-    <!-- Redirect Otomatis ke Google Apps Script -->
-    <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbwxFQf-l3bvEWcExkDHYGvEkAJSklVx3Pwt1KDn4YJYSj4G7K5iBP2TxjxddwR11t7c/exec">
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f8fafc;
-            color: #094067;
-        }
-        .loader {
-            text-align: center;
-        }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(61, 169, 252, 0.2);
-            border-top-color: #3da9fc;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem auto;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        a {
-            color: #3da9fc;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#0369a1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Absensi Pelatih - NEW Z SWIMMING</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ocean-deep: #0c4a6e;
+      --ocean-mid: #0284c7;
+      --ocean-light: #38bdf8;
+      --aqua-accent: #22d3ee;
+      --pool-water: rgba(224, 242, 254, 0.85);
+    }
+    * { -webkit-tap-highlight-color: transparent; font-family: 'Outfit', sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { 
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+      background-attachment: fixed;
+      min-height: 100dvh;
+      touch-action: manipulation;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .aquatic-gradient {
+      background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-mid) 100%);
+      position: relative;
+    }
+    .aquatic-gradient::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E");
+    }
+    .btn-aquatic {
+      background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-deep));
+      box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-aquatic:hover {
+      background: linear-gradient(135deg, #0369a1, #082f49);
+      box-shadow: 0 15px 25px -5px rgba(2, 132, 199, 0.5);
+      transform: translateY(-2px);
+    }
+    .btn-aquatic:active {
+      transform: scale(0.96) translateY(2px);
+      box-shadow: 0 5px 10px -5px rgba(2, 132, 199, 0.4);
+    }
+    .card-glass {
+      background: var(--pool-water);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 25px 50px -12px rgba(2, 132, 199, 0.15);
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-field {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid transparent;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .input-field:focus {
+      background: #ffffff;
+      border-color: var(--aqua-accent);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.2);
+    }
+    .input-label {
+      color: var(--ocean-deep);
+    }
+    /* Poolside Big Targets */
+    input[type="date"], input[type="time"], select.input-field, input[type="text"], .input-field {
+      min-height: 56px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #0f172a;
+    }
+    
+    .loader { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #ffffff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: none; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(30px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .animate-slide-up {
+      animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .suggestions-list {
+      position: absolute;
+      z-index: 50;
+      width: 100%;
+      max-height: 220px;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid #bae6fd;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.2);
+      display: none;
+      margin-top: 0.5rem;
+    }
+    .suggestion-item {
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #0c4a6e;
+      border-bottom: 1px solid #e0f2fe;
+      transition: background 0.2s ease;
+    }
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+    .suggestion-item:hover {
+      background-color: #e0f2fe;
+    }
+    .suggestion-item:active {
+      background-color: #bae6fd;
+    }
+
+    /* SVG Wave Animation */
+    .wave {
+      animation: wave 10s linear infinite;
+    }
+    .wave2 {
+      animation: wave 14s linear infinite;
+      animation-delay: -5s;
+    }
+    @keyframes wave {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Make select text black even if empty for high contrast */
+    select.input-field:invalid {
+      color: #64748b;
+    }
+    select.input-field option {
+      color: #0f172a;
+    }
+  </style>
 </head>
-<body>
-    <div class="loader">
-        <div class="spinner"></div>
-        <h2>Mengalihkan ke sistem absensi...</h2>
-        <p>Jika tidak dialihkan secara otomatis, <a href="https://script.google.com/macros/s/AKfycbwxFQf-l3bvEWcExkDHYGvEkAJSklVx3Pwt1KDn4YJYSj4G7K5iBP2TxjxddwR11t7c/exec">klik di sini</a>.</p>
+<body class="p-0 m-0 relative">
+  <!-- Dynamic Wave Header -->
+  <div class="aquatic-gradient h-40 sm:h-48 w-full relative overflow-hidden flex items-start justify-center pt-6 sm:pt-8">
+    <!-- Back Button -->
+    <a href="../index.html" class="absolute top-4 left-4 z-50 flex items-center justify-center w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl text-white hover:bg-white/30 transition-all border border-white/20 shadow-lg">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <div class="text-center z-10 flex flex-col items-center">
+      <div class="bg-white/10 backdrop-blur-md p-2 rounded-2xl inline-block shadow-lg mb-2 border border-white/20">
+        <img src="https://res.cloudinary.com/dmzezydzl/image/upload/q_auto/f_auto/v1769152895/logo_epdg1k.png" alt="Logo" class="h-12 w-12 sm:h-16 sm:w-16 object-contain filter drop-shadow-md">
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-lg uppercase tracking-widest">NEW Z SWIMMING</h1>
+      <p class="text-cyan-100 text-sm sm:text-base mt-1 font-medium tracking-wide">PORTAL PELATIH</p>
     </div>
     
-    <script>
-        // Fallback JavaScript Redirect
-        window.location.replace("https://script.google.com/macros/s/AKfycbwxFQf-l3bvEWcExkDHYGvEkAJSklVx3Pwt1KDn4YJYSj4G7K5iBP2TxjxddwR11t7c/exec");
-    </script>
+    <!-- Animated Waves -->
+    <svg class="absolute bottom-[-1px] left-0 w-[200%] h-12 sm:h-16 wave2 z-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,40 C150,80 350,0 600,40 C850,80 1050,0 1200,40 L1200,120 L0,120 Z" fill="rgba(224, 242, 254, 0.5)"></path>
+      <path d="M1200,40 C1350,80 1550,0 1800,40 C2050,80 2250,0 2400,40 L2400,120 L1200,120 Z" fill="rgba(224, 242, 254, 0.5)" transform="translate(-1200, 0)"></path>
+    </svg>
+    <svg class="absolute bottom-[-1px] left-0 w-[200%] h-10 sm:h-14 wave z-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,60 C150,20 350,100 600,60 C850,20 1050,100 1200,60 L1200,120 L0,120 Z" fill="#e0f2fe"></path>
+      <path d="M1200,60 C1350,20 1550,100 1800,60 C2050,20 2250,100 2400,60 L2400,120 L1200,120 Z" fill="#e0f2fe" transform="translate(-1200, 0)"></path>
+    </svg>
+  </div>
+
+  <div class="max-w-xl mx-auto w-full px-4 sm:px-6 pb-12 -mt-6 sm:-mt-8 relative z-20">
+
+    <!-- Success Message -->
+    <div id="successMessage" class="hidden my-4 p-5 bg-green-500/10 backdrop-blur-md border-2 border-green-500 text-green-800 rounded-2xl shadow-lg animate-slide-up">
+      <div class="flex items-center">
+        <div class="bg-green-500 text-white rounded-full p-2 mr-4 shadow-sm">
+          <i class="fas fa-check text-xl"></i>
+        </div>
+        <p id="successText" class="font-bold text-lg"></p>
+      </div>
+      <button onclick="resetForm()" class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold transition-colors">ISI FORMULIR LAGI</button>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="hidden my-4 p-5 bg-red-500/10 backdrop-blur-md border-2 border-red-500 text-red-800 rounded-2xl shadow-lg animate-slide-up">
+      <div class="flex items-center">
+        <div class="bg-red-500 text-white rounded-full p-2 mr-4 shadow-sm">
+          <i class="fas fa-exclamation text-xl"></i>
+        </div>
+        <p id="errorText" class="font-bold text-lg"></p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="attendanceForm" class="card-glass rounded-3xl p-6 sm:p-8 space-y-6 animate-slide-up">
+      
+      <div class="text-center mb-2">
+        <h2 class="text-xl font-extrabold text-[#0c4a6e] uppercase tracking-wide">Laporan Kehadiran</h2>
+        <div class="w-16 h-1 bg-cyan-400 mx-auto mt-2 rounded-full"></div>
+      </div>
+
+      <!-- Nama Pelatih -->
+      <div class="input-wrapper">
+        <label class="block text-sm font-bold input-label uppercase tracking-wider mb-2">Nama Pelatih</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-cyan-600 pointer-events-none">
+            <i class="fas fa-user-tie text-lg"></i>
+          </span>
+          <select name="namaPelatih" required class="input-field block w-full pl-12 pr-12 rounded-2xl outline-none appearance-none cursor-pointer">
+            <option value="" disabled selected class="text-slate-400">Pilih Pelatih...</option>
+            <option value="Rina">Rina</option>
+            <option value="Elsa">Elsa</option>
+            <option value="Melvin">Melvin</option>
+            <option value="Pashya">Pashya</option>
+            <option value="Area">Area</option>
+            <option value="Fuad">Fuad</option>
+            <option value="Yogi">Yogi</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+            <div class="bg-blue-100 rounded-full p-1.5 flex items-center justify-center">
+              <i class="fas fa-chevron-down text-cyan-600 text-xs"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tanggal & Lokasi -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="input-wrapper">
+          <label class="block text-sm font-bold input-label uppercase tracking-wider mb-2">Tanggal</label>
+          <input type="date" name="tanggal" id="tanggal" required class="input-field block w-full px-4 rounded-2xl outline-none cursor-pointer">
+        </div>
+        <div class="input-wrapper">
+          <label class="block text-sm font-bold input-label uppercase tracking-wider mb-2">Lokasi</label>
+          <div class="relative">
+            <select name="lokasi" required class="input-field block w-full pl-4 pr-12 rounded-2xl outline-none appearance-none cursor-pointer">
+              <option value="Kolam Renang Citra 1">Citra 1</option>
+              <option value="Kolam Renang Citra 2">Citra 2</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+              <div class="bg-blue-100 rounded-full p-1.5 flex items-center justify-center">
+                <i class="fas fa-chevron-down text-cyan-600 text-xs"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Waktu Mulai & Selesai -->
+      <div class="grid grid-cols-2 gap-5">
+        <div class="input-wrapper bg-blue-50/50 p-3 rounded-2xl border border-blue-100">
+          <label class="block text-xs font-bold text-blue-800 uppercase tracking-wider mb-1">Mulai</label>
+          <input type="time" name="waktuMulai" id="waktuMulai" required class="w-full bg-transparent outline-none font-bold text-xl text-center text-slate-800 border-b-2 border-cyan-400 focus:border-cyan-600 transition-colors py-1 cursor-pointer">
+        </div>
+        <div class="input-wrapper bg-blue-50/50 p-3 rounded-2xl border border-blue-100">
+          <label class="block text-xs font-bold text-blue-800 uppercase tracking-wider mb-1">Selesai</label>
+          <input type="time" name="waktuSelesai" id="waktuSelesai" required class="w-full bg-transparent outline-none font-bold text-xl text-center text-slate-800 border-b-2 border-cyan-400 focus:border-cyan-600 transition-colors py-1 cursor-pointer">
+        </div>
+      </div>
+
+      <!-- Murid -->
+      <div class="input-wrapper">
+        <label class="block text-sm font-bold input-label uppercase tracking-wider mb-2 flex items-center justify-between">
+          <span>Daftar Murid</span>
+          <span class="text-[10px] bg-cyan-100 text-cyan-800 px-2 py-0.5 rounded-full font-bold">PISAHKAN KOMA</span>
+        </label>
+        <div class="relative">
+          <textarea name="muridHadir" id="muridHadir" rows="2" placeholder="Cth: Zahra, Hakim..." required class="input-field block w-full px-4 py-4 rounded-2xl outline-none resize-none" style="min-height: 80px;"></textarea>
+          <div id="muridSuggestions" class="suggestions-list"></div>
+        </div>
+      </div>
+
+      <!-- Materi -->
+      <div class="input-wrapper">
+        <label class="block text-sm font-bold input-label uppercase tracking-wider mb-2">Materi Latihan</label>
+        <div class="relative">
+          <input list="materiList" name="materi" id="materi" placeholder="Pilih atau ketik materi..." required class="input-field block w-full pl-4 pr-10 py-4 rounded-2xl outline-none">
+          <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-cyan-600 pointer-events-none">
+             <i class="fas fa-list text-sm"></i>
+          </span>
+        </div>
+        <datalist id="materiList">
+          <option value="Pengenalan Air">
+          <option value="Pernapasan (Bubbling)">
+          <option value="Mengapung (Floating)">
+          <option value="Meluncur (Gliding)">
+          <option value="Gaya Bebas (Freestyle)">
+          <option value="Gaya Dada / Katak (Breaststroke)">
+          <option value="Gaya Punggung (Backstroke)">
+          <option value="Gaya Kupu-kupu (Butterfly)">
+          <option value="Teknik Start (Diving)">
+          <option value="Pembalikan (Turn)">
+          <option value="Ketahanan (Sprint/Endurance)">
+          <option value="Water Trappen">
+        </datalist>
+      </div>
+
+      <!-- Catatan -->
+      <div class="input-wrapper">
+        <label class="block text-sm font-bold input-label uppercase tracking-wider mb-2">
+          Catatan <span class="text-slate-400 font-medium normal-case">(Opsional)</span>
+        </label>
+        <textarea name="catatan" rows="2" placeholder="Kondisi cuaca, progress murid..." class="input-field block w-full px-4 py-4 rounded-2xl outline-none resize-none" style="min-height: 80px;"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="pt-2">
+        <button type="submit" id="submitBtn" class="w-full btn-aquatic text-white font-extrabold text-lg py-5 px-6 rounded-2xl flex items-center justify-center space-x-3">
+          <i class="fas fa-paper-plane"></i>
+          <span id="btnText" class="tracking-wider">KIRIM SEKARANG</span>
+          <div id="loader" class="loader"></div>
+        </button>
+      </div>
+
+    </form>
+    
+    <footer class="mt-10 pb-6 text-center">
+      <div class="flex items-center justify-center space-x-2 text-[#0c4a6e] font-bold text-xs uppercase tracking-widest opacity-60">
+        <i class="fas fa-water"></i>
+        <span>NEW Z SWIMMING &copy; 2024</span>
+        <i class="fas fa-water"></i>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let existingStudents = [];
+
+    // Initialize Page
+    window.onload = function() {
+      // 1. Set default date and time
+      const now = new Date();
+      document.getElementById('tanggal').value = now.toISOString().split('T')[0];
+      
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('waktuMulai').value = hours + ':' + mins;
+      
+      const endHours = String((now.getHours() + 2) % 24).padStart(2, '0');
+      document.getElementById('waktuSelesai').value = endHours + ':' + mins;
+
+      // 2. Fetch existing students for autocomplete
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(function(students) {
+            existingStudents = students;
+          })
+          .getExistingStudents();
+      }
+    };
+
+    // --- Murid Autocomplete Logic ---
+    const muridInput = document.getElementById('muridHadir');
+    const muridSuggestions = document.getElementById('muridSuggestions');
+
+    muridInput.oninput = function() {
+      const value = this.value;
+      const parts = value.split(',');
+      const currentQuery = parts[parts.length - 1].trim().toLowerCase();
+      
+      if (currentQuery.length < 1) {
+        muridSuggestions.style.display = 'none';
+        return;
+      }
+
+      const matches = existingStudents.filter(name => 
+        name.toLowerCase().includes(currentQuery) && 
+        !parts.map(p => p.trim().toLowerCase()).slice(0, -1).includes(name.toLowerCase())
+      );
+
+      if (matches.length > 0) {
+        muridSuggestions.innerHTML = '';
+        matches.slice(0, 6).forEach(name => {
+          const div = document.createElement('div');
+          div.className = 'suggestion-item flex items-center';
+          div.innerHTML = '<i class="fas fa-user-circle text-cyan-500 mr-3 text-lg"></i> <span>' + name + '</span>';
+          div.onclick = function() {
+            parts[parts.length - 1] = ' ' + name;
+            muridInput.value = parts.join(',').trim() + ', ';
+            muridSuggestions.style.display = 'none';
+            muridInput.focus();
+          };
+          muridSuggestions.appendChild(div);
+        });
+        muridSuggestions.style.display = 'block';
+      } else {
+        muridSuggestions.style.display = 'none';
+      }
+    };
+
+    // Close suggestions on outside click
+    document.addEventListener('click', function(e) {
+      if (e.target !== muridInput) {
+        muridSuggestions.style.display = 'none';
+      }
+    });
+
+    // --- Form Submission Logic ---
+    const form = document.getElementById('attendanceForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const loader = document.getElementById('loader');
+    const successMsg = document.getElementById('successMessage');
+    const successText = document.getElementById('successText');
+    const errorMsg = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+
+    form.onsubmit = function(e) {
+      e.preventDefault();
+      
+      submitBtn.disabled = true;
+      btnText.textContent = 'MENGIRIM...';
+      loader.style.display = 'block';
+      submitBtn.querySelector('.fa-paper-plane').style.display = 'none';
+      successMsg.classList.add('hidden');
+      errorMsg.classList.add('hidden');
+
+      const formData = {
+        namaPelatih: form.namaPelatih.value,
+        tanggal: form.tanggal.value,
+        waktuMulai: form.waktuMulai.value,
+        waktuSelesai: form.waktuSelesai.value,
+        lokasi: form.lokasi.value,
+        muridHadir: form.muridHadir.value,
+        materi: form.materi.value,
+        catatan: form.catatan.value
+      };
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(function(response) {
+            if (response.success) {
+              successMsg.classList.remove('hidden');
+              successText.textContent = response.message;
+              form.classList.add('hidden');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              showError(response.message);
+            }
+          })
+          .withFailureHandler(function(err) {
+            showError('Terjadi kesalahan sistem: ' + err);
+          })
+          .processForm(formData);
+      } else {
+        // For local testing
+        setTimeout(() => {
+          console.log(formData);
+          successMsg.classList.remove('hidden');
+          successText.textContent = 'Berhasil disimpan (Mode Test)!';
+          form.classList.add('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 1500);
+      }
+    };
+
+    function showError(msg) {
+      errorMsg.classList.remove('hidden');
+      errorText.textContent = msg;
+      resetBtn();
+    }
+
+    function resetBtn() {
+      submitBtn.disabled = false;
+      btnText.textContent = 'KIRIM SEKARANG';
+      loader.style.display = 'none';
+      submitBtn.querySelector('.fa-paper-plane').style.display = 'inline-block';
+    }
+
+    function resetForm() {
+      form.reset();
+      form.classList.remove('hidden');
+      successMsg.classList.add('hidden');
+      window.onload();
+      resetBtn();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>

@@ -104,30 +104,31 @@
 </head>
 
 <body>
+    <div id="app" x-data="{ pwOpen: false, password: '', pwError: false, checkPassword() { const url = window.checkAuthPassword(this.password); if (url) { this.pwOpen = false; this.password = ''; window.location.href = url; } else { this.pwError = true; } } }" @open-password-modal.window="pwOpen = true; password = ''; pwError = false">
     <a href="#main-content" class="skip-link">Skip to content</a>
 
     <!-- Header -->
-    <header class="header" id="header">
+    <header class="header" id="header" x-data="{ open: false }" x-effect="document.body.classList.toggle('menu-open', open)">
         <div class="container">
             <a href="#" class="logo">
                 NEW Z SWIMMING
             </a>
 
             <nav>
-                <ul class="nav-menu" id="nav-menu">
-                    <li><a href="#home" class="nav-link active">Home</a></li>
-                    <li><a href="#programs" class="nav-link">Program</a></li>
-                    <li><a href="#schedule" class="nav-link">Jadwal</a></li>
-                    <li><a href="#pricing" class="nav-link">Harga</a></li>
-                    <li><a href="#register" class="nav-link">Kontak</a></li>
-                    <li><a href="#" id="btn-absensi" class="nav-link">Absensi</a></li>
+                <ul class="nav-menu" id="nav-menu" :class="{ active: open }">
+                    <li><a href="#home" class="nav-link active" @click="open = false">Home</a></li>
+                    <li><a href="#programs" class="nav-link" @click="open = false">Program</a></li>
+                    <li><a href="#schedule" class="nav-link" @click="open = false">Jadwal</a></li>
+                    <li><a href="#pricing" class="nav-link" @click="open = false">Harga</a></li>
+                    <li><a href="#register" class="nav-link" @click="open = false">Kontak</a></li>
+                    <li><a href="#" class="nav-link" @click.prevent="open = false; $dispatch('open-password-modal')">Absensi</a></li>
                     <li><a href="https://wa.link/8d8sm0" target="_blank" class="btn btn-primary"
                             style="padding: 0.5rem 1.25rem;">Hubungi Pelatih</a>
                     </li>
                 </ul>
             </nav>
 
-            <div class="hamburger" id="hamburger" role="button" aria-label="Buka Menu" aria-expanded="false">
+            <div class="hamburger" id="hamburger" role="button" aria-label="Buka Menu" :aria-expanded="open" @click="open = !open" :class="{ active: open }">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -234,7 +235,7 @@
         </section>
 
         <!-- Team/Coaches Section -->
-        <section id="team" class="team">
+        <section id="team" class="team" x-data="{ coachOpen: false, coach: { img: '', name: '', role: '', desc: '' } }">
             <div class="container">
                 <h2 class="section-title">Pelatih Berpengalaman</h2>
                 <p class="section-subtitle">Didukung oleh tim pelatih yang terampil dan berorientasi pada kualitas.</p>
@@ -243,7 +244,8 @@
                     <div class="team-grid" id="team-slider">
                         <!-- Coach Cards with data attributes for modal -->
                         <div class="team-card" data-name="Coach Zainal" data-role="Head Coach"
-                            data-desc="Berpengalaman lebih dari 15 tahun melatih atlet nasional.">
+                            data-desc="Berpengalaman lebih dari 15 tahun melatih atlet nasional."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769235650/coach_zainal_oekff1.jpg"
                                 alt="Coach Zainal - Head Coach New Z Swimming dengan sertifikasi nasional"
                                 loading="lazy" class="team-photo">
@@ -253,7 +255,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Arief" data-role="Pelatih Fisik"
-                            data-desc="Spesialis peningkatan stamina dan kekuatan atlet renang.">
+                            data-desc="Spesialis peningkatan stamina dan kekuatan atlet renang."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769325245/arief_yw32s0.jpg"
                                 alt="Coach Arief - Pelatih Fisik spesialis stamina" loading="lazy" decoding="async"
                                 class="team-photo" width="150" height="150">
@@ -263,7 +266,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Irvan" data-role="Pelatih Teknik"
-                            data-desc="Ahli dalam perbaikan teknik gaya renang untuk efisiensi maksimal.">
+                            data-desc="Ahli dalam perbaikan teknik gaya renang untuk efisiensi maksimal."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769324831/irvan_b59am9.jpg"
                                 alt="Coach Irvan" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -272,7 +276,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Pashya" data-role="Pelatih Teknik"
-                            data-desc="Pelatih sabar yang sangat disukai anak-anak pemula.">
+                            data-desc="Pelatih sabar yang sangat disukai anak-anak pemula."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769235733/Foto_Rayfan_d5f8km.png"
                                 alt="Coach Pashya" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -281,7 +286,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Melvin" data-role="Coach"
-                            data-desc="Fokus pada Pengembangan Mental Juara & Disiplin untuk Anak">
+                            data-desc="Fokus pada Pengembangan Mental Juara & Disiplin untuk Anak"
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769325515/melvin_vwxzuu.jpg"
                                 alt="Coach Melvin" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -290,7 +296,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Tea" data-role="Coach"
-                            data-desc="Instruktur ramah yang membuat anak-anak baru merasa nyaman saat belajar.">
+                            data-desc="Instruktur ramah yang membuat anak-anak baru merasa nyaman saat belajar."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769235999/tea_jfidyp.jpg"
                                 alt="Coach Tea" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -299,7 +306,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Fuad" data-role="Coach"
-                            data-desc="Suasana latihan jadi lebih ceria! Coach yang sabar ini selalu jadi favorit anak-anak yang baru mulai berenang.">
+                            data-desc="Suasana latihan jadi lebih ceria! Coach yang sabar ini selalu jadi favorit anak-anak yang baru mulai berenang."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769695405/puat_jqf7yc.jpg"
                                 alt="Coach Fuad" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -308,7 +316,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Rina" data-role="Coach"
-                            data-desc="Suasana latihan jadi lebih ceria! Coach yang sabar ini selalu jadi favorit anak-anak yang baru mulai berenang.">
+                            data-desc="Suasana latihan jadi lebih ceria! Coach yang sabar ini selalu jadi favorit anak-anak yang baru mulai berenang."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769235732/WhatsApp_Image_2026-01-24_at_12.05.01_bqj6l9.jpg"
                                 alt="Coach Rina" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -317,7 +326,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Area" data-role="Coach"
-                            data-desc="Pelatih energik yang membuat suasana latihan selalu menyenangkan.">
+                            data-desc="Pelatih energik yang membuat suasana latihan selalu menyenangkan."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769235793/area_ldyurn.jpg"
                                 alt="Coach Area" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -326,7 +336,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Elsa" data-role="Coach"
-                            data-desc="Coach yang lembut dalam pendekatan, sehingga anak-anak pemula betah berlatih dengannya.">
+                            data-desc="Coach yang lembut dalam pendekatan, sehingga anak-anak pemula betah berlatih dengannya."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769235732/WhatsApp_Image_2026-01-24_at_12.05.03_rq2spj.jpg"
                                 alt="Coach Elsa" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -335,7 +346,8 @@
                             </div>
                         </div>
                         <div class="team-card" data-name="Coach Yogi" data-role="Coach"
-                            data-desc="Coach yang penuh senyum dan kesabaran—anak-anak pemula selalu merasa aman dan senang belajar bersamanya.">
+                            data-desc="Coach yang penuh senyum dan kesabaran—anak-anak pemula selalu merasa aman dan senang belajar bersamanya."
+                            @click="coach.img = $el.querySelector('img').src; coach.name = $el.dataset.name; coach.role = $el.dataset.role; coach.desc = $el.dataset.desc; coachOpen = true">
                             <img src="https://res.cloudinary.com/dmzezydzl/image/upload/v1769235795/yogi_szkw1h.jpg"
                                 alt="Coach Yogi" loading="lazy" class="team-photo">
                             <div class="team-info">
@@ -347,14 +359,18 @@
                 </div>
 
                 <!-- Modal Container for Coach Profile -->
-                <div id="coach-modal" class="modal">
+                <div id="coach-modal" class="modal"
+                    x-show="coachOpen"
+                    :class="{'active': coachOpen}"
+                    x-transition
+                    @click.self="coachOpen = false">
                     <div class="modal-content">
-                        <span class="close-modal">&times;</span>
+                        <span class="close-modal" @click="coachOpen = false">&times;</span>
                         <div class="modal-body">
-                            <img id="modal-img" src="" alt="Coach">
-                            <h3 id="modal-name"></h3>
-                            <p id="modal-role" class="team-role"></p>
-                            <p id="modal-desc"></p>
+                            <img :src="coach.img" alt="Coach">
+                            <h3 x-text="coach.name"></h3>
+                            <p class="team-role" x-text="coach.role"></p>
+                            <p x-text="coach.desc"></p>
                             <a href="https://wa.link/8d8sm0" class="btn btn-primary" style="margin-top: 1rem;">Hubungi
                                 Coach</a>
                         </div>
@@ -549,30 +565,41 @@
             <div class="container">
                 <h2 class="section-title">Pertanyaan Umum</h2>
                 <div class="faq-grid" style="max-width: 800px; margin: 0 auto; display: grid; gap: 1.5rem;">
-                    <div class="faq-item"
+                    <div class="faq-item" x-data="{ expanded: false }"
                         style="background: var(--white); padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--blue-2);">Apakah anak yang
-                            takut air bisa ikut?</h3>
-                        <p style="color: var(--slate-600);">Sangat bisa. Kami memiliki metode khusus untuk pengenalan
+                        <button class="faq-question" @click="expanded = !expanded" :aria-expanded="expanded"
+                            style="width:100%; text-align:left; background:none; border:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:1.1rem; color:var(--blue-2); font-weight:700;">Apakah anak yang takut air bisa ikut?</span>
+                            <span x-text="expanded ? '−' : '+'" style="font-size:1.5rem; color:var(--blue-2); font-weight:700; flex-shrink:0;"></span>
+                        </button>
+                        <p x-show="expanded" x-transition style="color: var(--slate-600); margin-top:0.75rem;">Sangat bisa. Kami memiliki metode khusus untuk pengenalan
                             air (water adjustment) agar anak merasa aman dan nyaman sebelum mulai belajar teknik.</p>
                     </div>
-                    <div class="faq-item"
+                    <div class="faq-item" x-data="{ expanded: false }"
                         style="background: var(--white); padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--blue-2);">Kapan jadwal latihan
-                            yang tersedia?</h3>
-                        <p style="color: var(--slate-600);">Kami tersedia setiap hari Selasa - Minggu. Selasa-Jumat di
+                        <button class="faq-question" @click="expanded = !expanded" :aria-expanded="expanded"
+                            style="width:100%; text-align:left; background:none; border:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:1.1rem; color:var(--blue-2); font-weight:700;">Kapan jadwal latihan yang tersedia?</span>
+                            <span x-text="expanded ? '−' : '+'" style="font-size:1.5rem; color:var(--blue-2); font-weight:700; flex-shrink:0;"></span>
+                        </button>
+                        <p x-show="expanded" x-transition style="color: var(--slate-600); margin-top:0.75rem;">Kami tersedia setiap hari Selasa - Minggu. Selasa-Jumat di
                             sore hari, dan Sabtu-Minggu tersedia pilihan pagi atau sore.</p>
                     </div>
-                    <div class="faq-item"
+                    <div class="faq-item" x-data="{ expanded: false }"
                         style="background: var(--white); padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--blue-2);">Di mana lokasi kolam
-                            renangnya?</h3>
-                        <p style="color: var(--slate-600);">Latihan rutin dilaksanakan di Kolam Renang Citra 1,
+                        <button class="faq-question" @click="expanded = !expanded" :aria-expanded="expanded"
+                            style="width:100%; text-align:left; background:none; border:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:1.1rem; color:var(--blue-2); font-weight:700;">Di mana lokasi kolam renangnya?</span>
+                            <span x-text="expanded ? '−' : '+'" style="font-size:1.5rem; color:var(--blue-2); font-weight:700; flex-shrink:0;"></span>
+                        </button>
+                        <p x-show="expanded" x-transition style="color: var(--slate-600); margin-top:0.75rem;">Latihan rutin dilaksanakan di Kolam Renang Citra 1,
                             Kalideres, Jakarta Barat.</p>
                     </div>
                 </div>
             </div>
         </section>
+
+
 
         <!-- Gallery Section -->
         <section id="gallery" class="gallery">
@@ -686,17 +713,17 @@
     </main>
 
     <!-- Password Modal -->
-    <div id="password-modal" class="modal">
+    <div id="password-modal" class="modal" x-show="pwOpen" :class="{'active': pwOpen}" x-transition @click.self="pwOpen = false">
         <div class="modal-content" style="max-width: 400px; text-align: center; padding: 2.5rem;">
-            <span class="close-password-modal" style="position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer;">&times;</span>
+            <span class="close-password-modal" style="position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer;" @click="pwOpen = false">&times;</span>
             <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
             <h3 style="margin-bottom: 1rem;">Akses Terbatas</h3>
             <p style="margin-bottom: 1.5rem; color: var(--slate-600); font-size: 0.9rem;">Masukkan kata sandi khusus untuk mengakses fitur yang Anda butuhkan.</p>
             
-            <input type="password" id="absensi-password" placeholder="Kata Sandi" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1.5px solid var(--slate-200); border-radius: 8px; font-family: inherit; font-size: 1rem; outline: none;">
+            <input type="password" id="absensi-password" placeholder="Kata Sandi" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1.5px solid var(--slate-200); border-radius: 8px; font-family: inherit; font-size: 1rem; outline: none;" x-model="password" @keyup.enter="checkPassword()">
             
-            <button id="submit-password" class="btn btn-primary" style="width: 100%;">Masuk</button>
-            <p id="password-error" style="color: #ef4444; font-size: 0.85rem; display: none; margin-top: 0.5rem;">Kata sandi salah!</p>
+            <button id="submit-password" class="btn btn-primary" style="width: 100%;" @click="checkPassword()">Masuk</button>
+            <p id="password-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem;" x-show="pwError">Kata sandi salah!</p>
         </div>
     </div>
 
@@ -707,7 +734,10 @@
         </div>
     </footer>
 
+    </div><!-- #app -->
+
     <script src="js/main.js"></script>
+    <script src="node_modules/alpinejs/dist/cdn.min.js" defer></script>
 </body>
 
 </html>
