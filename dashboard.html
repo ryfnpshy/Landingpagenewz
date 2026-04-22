@@ -291,6 +291,80 @@
         .spinner { width: 40px; height: 40px; border: 3px solid var(--surface-container); border-top-color: var(--secondary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* ===== SMOOTH REFRESH TRANSITIONS ===== */
+        #dashboard-content {
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #dashboard-content.is-refreshing {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        /* Refresh indicator pill */
+        .refresh-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--secondary-container);
+            color: var(--on-secondary-container);
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        .refresh-indicator.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .refresh-indicator .ri-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--secondary);
+            animation: pulse-dot 1s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        /* Spin animation for the refresh button */
+        .btn-refresh.is-spinning svg {
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* ===== SKELETON SHIMMER ===== */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background: var(--surface-container) !important;
+            color: transparent !important;
+            border-radius: var(--radius-sm);
+            user-select: none;
+            pointer-events: none;
+        }
+        .skeleton * { visibility: hidden; }
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255,255,255,0.5) 50%,
+                transparent 100%
+            );
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%   { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .dash-main { padding: 1rem; }
@@ -324,7 +398,11 @@
                     <option value="month">Bulan Ini</option>
                     <option value="all">Semua Waktu</option>
                 </select>
-                <button class="btn-refresh" onclick="loadData(false)" aria-label="Refresh Data">
+                <span class="refresh-indicator" id="refresh-indicator">
+                    <span class="ri-dot"></span>
+                    Memperbarui…
+                </span>
+                <button class="btn-refresh" id="btn-refresh" onclick="refreshData()" aria-label="Refresh Data">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                 </button>
             </div>
@@ -451,12 +529,18 @@
         // CONFIG & STATE
         // ============================
         const SHEET_ID = '1g-CK1eaLcslsOyp3ATMVX9I8gtRIFxiw9RcjOvlVSjw';
-        const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        const GVIZ_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
         
+        // Auto-refresh interval (ms) — every 30 seconds
+        const REFRESH_INTERVAL_MS = 30000;
+
         let allRows = [];
         let filteredRows = [];
         let chartTrend = null;
         let chartDay = null;
+        let _refreshTimer = null;
+        let _isRefreshing = false;
+        let _jsonpCounter = 0;
 
         // Set Chart Defaults
         Chart.defaults.color = '#42474e';
@@ -486,6 +570,37 @@
             return h > 0 ? `${h}j ${m > 0 ? m+'m' : ''}` : `${m}m`;
         }
 
+        /**
+         * Builds a GVIZ URL with a cache-busting timestamp parameter
+         * so the browser never serves a stale cached response.
+         * NOTE: responseHandler is a tqx sub-parameter (;responseHandler:name),
+         * NOT a separate query parameter.
+         */
+        function buildGvizUrl(callbackName) {
+            return `${GVIZ_BASE};responseHandler:${callbackName}&_cb=${Date.now()}`;
+        }
+
+        /**
+         * Remove old JSONP <script> tags to prevent memory leaks.
+         */
+        function cleanupJsonpScripts() {
+            document.querySelectorAll('script[data-jsonp-dash]').forEach(s => s.remove());
+        }
+
+        /**
+         * Show / hide the refresh indicator pill and spin the button.
+         */
+        function setRefreshUI(active) {
+            const indicator = document.getElementById('refresh-indicator');
+            const btn = document.getElementById('btn-refresh');
+            if (indicator) indicator.classList.toggle('visible', active);
+            if (btn) btn.classList.toggle('is-spinning', active);
+        }
+
+        /**
+         * Initial data load — shows full skeleton / spinner on first visit.
+         * Also tries the localStorage cache for an instant first paint.
+         */
         function loadData(isInitial = true) {
             if (isInitial) {
                 const cached = localStorage.getItem('nz_dash_data');
@@ -503,18 +618,60 @@
                         document.getElementById('dashboard-content').style.display = 'block';
                     } catch(e) { console.error('Cache error', e); }
                 }
-            } else {
-                document.getElementById('loading-state').style.display = 'block';
-                document.getElementById('dashboard-content').style.display = 'none';
             }
 
             document.getElementById('error-state').style.display = 'none';
 
-            const callbackName = 'handleSheetsResponse';
+            // Track initial load so auto-refresh doesn't collide
+            _isRefreshing = true;
+            setRefreshUI(true);
+            _fetchFromSheet(!isInitial);
+        }
+
+        /**
+         * refreshData — called by setInterval and the manual refresh button.
+         * Does NOT flash a full-page loader. Instead it:
+         *  1. Adds an opacity dim to #dashboard-content
+         *  2. Shows a subtle "Memperbarui…" indicator pill
+         *  3. Fetches fresh data with a cache-busted URL
+         *  4. Smoothly transitions back once data arrives
+         */
+        function refreshData() {
+            if (_isRefreshing) return;  // prevent concurrent refreshes
+            _isRefreshing = true;
+
+            const content = document.getElementById('dashboard-content');
+            // Only dim if content is currently visible (not on first load)
+            if (content && content.style.display !== 'none') {
+                content.classList.add('is-refreshing');
+            }
+            setRefreshUI(true);
+
+            _fetchFromSheet(true);
+        }
+
+        /**
+         * Core JSONP fetch — shared by loadData and refreshData.
+         * @param {boolean} isSilent — if true, don't show full-page loader on failure
+         */
+        function _fetchFromSheet(isSilent) {
+            // Cleanup previous JSONP scripts to prevent DOM bloat
+            cleanupJsonpScripts();
+
+            // Unique callback per request to avoid collisions
+            _jsonpCounter++;
+            const callbackName = `_nzDashCb${_jsonpCounter}`;
+
             window[callbackName] = function(json) {
-                if (json.status !== 'ok') { if(!allRows.length) showError(); return; }
-                
-                allRows = (json.table.rows || []).map(row => {
+                // Clean up the callback from window
+                delete window[callbackName];
+
+                if (!json || json.status !== 'ok') {
+                    _onFetchDone(isSilent, false);
+                    return;
+                }
+
+                const newRows = (json.table.rows || []).map(row => {
                     const c = row.c || [];
                     const studentsRaw = c[6]?.v || '';
                     return {
@@ -527,24 +684,90 @@
                         students: studentsRaw.split(/[,،\n]/).map(s=>s.trim()).filter(s=>s.length>0)
                     };
                 });
-                
+
+                // Only re-render if data actually changed
+                const hasChanged = newRows.length !== allRows.length ||
+                    JSON.stringify(newRows.map(r=>r.timestamp?.getTime())) !==
+                    JSON.stringify(allRows.map(r=>r.timestamp?.getTime()));
+
+                allRows = newRows;
+
                 try { localStorage.setItem('nz_dash_data', JSON.stringify(allRows)); } catch(e){}
-                
-                applyGlobalFilter();
-                document.getElementById('loading-state').style.display = 'none';
-                document.getElementById('dashboard-content').style.display = 'block';
+
+                if (hasChanged) {
+                    applyGlobalFilter();
+                }
+
+                _onFetchDone(isSilent, true);
             };
 
             const script = document.createElement('script');
-            script.src = `${GVIZ_URL};responseHandler:${callbackName}`;
-            script.onerror = () => { if(!allRows.length) showError(); };
+            script.setAttribute('data-jsonp-dash', 'true');
+            // Cache-busted URL with responseHandler as tqx sub-parameter
+            script.src = buildGvizUrl(callbackName);
+            script.onerror = () => {
+                delete window[callbackName];
+                _onFetchDone(isSilent, false);
+            };
             document.head.appendChild(script);
+        }
+
+        /**
+         * Post-fetch handler for both success and failure.
+         */
+        function _onFetchDone(isSilent, success) {
+            const content = document.getElementById('dashboard-content');
+
+            if (success) {
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('error-state').style.display = 'none';
+                if (content) {
+                    content.style.display = 'block';
+                    content.classList.remove('is-refreshing');
+                }
+            } else {
+                if (!isSilent && !allRows.length) {
+                    showError();
+                }
+                // On silent failure, just remove the dim
+                if (content) content.classList.remove('is-refreshing');
+            }
+
+            setRefreshUI(false);
+            _isRefreshing = false;
         }
 
         function showError() {
             document.getElementById('loading-state').style.display = 'none';
             document.getElementById('error-state').style.display = 'block';
         }
+
+        // ============================
+        // AUTO-REFRESH (setInterval)
+        // ============================
+        function startAutoRefresh() {
+            stopAutoRefresh();
+            _refreshTimer = setInterval(refreshData, REFRESH_INTERVAL_MS);
+            console.log(`[Dashboard] Auto-refresh started (every ${REFRESH_INTERVAL_MS / 1000}s)`);
+        }
+
+        function stopAutoRefresh() {
+            if (_refreshTimer) {
+                clearInterval(_refreshTimer);
+                _refreshTimer = null;
+            }
+        }
+
+        // Pause auto-refresh when tab is not visible to save resources
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                // Immediately refresh when tab becomes visible again
+                refreshData();
+                startAutoRefresh();
+            }
+        });
 
         // ============================
         // FILTER & RENDER
@@ -787,7 +1010,10 @@
         // ============================
         // INIT
         // ============================
-        window.addEventListener('DOMContentLoaded', () => loadData(true));
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData(true);
+            startAutoRefresh();
+        });
     </script>
     <script src="node_modules/alpinejs/dist/cdn.min.js" defer></script>
 </body>

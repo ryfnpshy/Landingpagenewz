@@ -183,7 +183,7 @@ describe('Property 5: Invalid password always sets error flag', () => {
       get password() { return state.password; },
       get pwError() { return state.pwError; },
       checkPassword() {
-        const ABSENSI_URL = 'https://script.google.com/macros/s/AKfycbwxFQf-l3bvEWcExkDHYGvEkAJSklVx3Pwt1KDn4YJYSj4G7K5iBP2TxjxddwR11t7c/exec';
+        const ABSENSI_URL = 'https://script.google.com/macros/s/AKfycby7rfCZWkaQUn45iZLegI2h5BJyDa6oUdFMgeaMGaD-r-FDT8VFpq-9LEEwuEfY-pZ_aQ/exec';
         if (state.password === 'newzswimming') {
           state.pwOpen = false;
           state.password = '';

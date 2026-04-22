@@ -1,6 +1,6 @@
 // Auth Password Configuration
 window.AUTH_CONFIG = {
-    'newzswimming': 'absensi/index.html',
+    'newzswimming': 'https://script.google.com/macros/s/AKfycby7rfCZWkaQUn45iZLegI2h5BJyDa6oUdFMgeaMGaD-r-FDT8VFpq-9LEEwuEfY-pZ_aQ/exec',
     'admin123': 'dashboard.html'
 };
 
