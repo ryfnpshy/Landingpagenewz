@@ -1,0 +1,4 @@
+# Basic redirects
+/admin /dashboard.html 301
+/login /dashboard.html 301
+/attendance /absensi/index.html 301

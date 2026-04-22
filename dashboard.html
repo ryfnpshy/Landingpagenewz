@@ -10,11 +10,12 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://docs.google.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
-    <!-- Chart.js -->
+    <!-- Critical Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
     <style>
         :root {
@@ -661,8 +662,18 @@
             // Unique callback per request to avoid collisions
             _jsonpCounter++;
             const callbackName = `_nzDashCb${_jsonpCounter}`;
+            
+            // Timeout protection: if no response in 10s, show error
+            const fetchTimeout = setTimeout(() => {
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                    _onFetchDone(isSilent, false);
+                    console.warn('[Dashboard] Fetch timed out');
+                }
+            }, 10000);
 
             window[callbackName] = function(json) {
+                clearTimeout(fetchTimeout);
                 // Clean up the callback from window
                 delete window[callbackName];
 
@@ -1015,6 +1026,5 @@
             startAutoRefresh();
         });
     </script>
-    <script src="node_modules/alpinejs/dist/cdn.min.js" defer></script>
 </body>
 </html>
